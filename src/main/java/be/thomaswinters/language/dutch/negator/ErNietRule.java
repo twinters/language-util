@@ -12,7 +12,7 @@ import java.util.Optional;
  */
 public class ErNietRule extends AbstractFirstWordRule {
 
-    protected ErNietRule(ILanguageTool languageTool) {
+    public ErNietRule(ILanguageTool languageTool) {
         super(languageTool);
     }
 

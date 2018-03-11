@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public class NounFirstRule extends AbstractFirstWordRule {
 
-    protected NounFirstRule(ILanguageTool languageTool) {
+    public NounFirstRule(ILanguageTool languageTool) {
         super(languageTool);
     }
 

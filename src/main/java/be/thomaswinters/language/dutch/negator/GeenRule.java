@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class GeenRule extends AbstractFirstWordRule {
-    protected GeenRule(ILanguageTool languageTool) {
+    public GeenRule(ILanguageTool languageTool) {
         super(languageTool);
     }
 
