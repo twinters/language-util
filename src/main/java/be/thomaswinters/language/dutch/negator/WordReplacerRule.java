@@ -34,11 +34,11 @@ public class WordReplacerRule extends AbstractSentenceAnalysisRule {
         Optional<AnalyzedTokenReadings> firstSearchElement = tokens.stream().filter(token -> token.getToken().toLowerCase().equals(searchWord)).
                 findFirst();
         if (firstSearchElement.isPresent()) {
-            System.out.println("-- " + searchWord.toUpperCase());
             int elementIdx = tokens.indexOf(firstSearchElement.get());
             Optional<AnalyzedTokenReadings> previousWord = LanguageToolUtils.previousWordToken(elementIdx, tokens);
             // If not blacklisted previous word:
             if (!previousWord.isPresent() || !previousWordBlacklist.contains(previousWord.get().getToken().toLowerCase())) {
+                System.out.println("-- " + searchWord.toUpperCase());
                 return Optional.of(LanguageToolUtils.replaceToken(tokens, elementIdx, replacementWord).getText());
             }
         }

@@ -165,15 +165,26 @@ public class DutchSentenceSubjectReplacer {
 
     private String getNewVerb(AnalyzedTokenReadings inputVerb, SubjectType type) {
         String outputVerb = inputVerb.getToken();
-        if (type.equals(SubjectType.FIRST_SINGULAR)) {
-            if (outputVerb.charAt(outputVerb.length() - 1) == 't') {
-                outputVerb = outputVerb.substring(0, outputVerb.length() - 1);
-            }
-            // Check if trailing vowels
-            if (vowels.contains(outputVerb.charAt(outputVerb.length() - 1))
-                    && vowels.contains(outputVerb.charAt(outputVerb.length() - 2))) {
-                outputVerb = outputVerb.substring(0, outputVerb.length() - 1);
-            }
+        switch (type) {
+            case FIRST_SINGULAR:
+                if (outputVerb.charAt(outputVerb.length() - 1) == 't') {
+                    outputVerb = outputVerb.substring(0, outputVerb.length() - 1);
+                }
+                // Check if trailing vowels
+                if (vowels.contains(outputVerb.charAt(outputVerb.length() - 1))
+                        && vowels.contains(outputVerb.charAt(outputVerb.length() - 2))) {
+                    outputVerb = outputVerb.substring(0, outputVerb.length() - 1);
+                }
+                break;
+            case FIRST_PLURAL:
+            case SECOND_PLURAL:
+            case THIRD_PLURAL:
+                if (outputVerb.charAt(outputVerb.length() - 1) == 't' && outputVerb.charAt(outputVerb.length() - 2) != 't') {
+                    outputVerb = outputVerb.substring(0, outputVerb.length() - 1);
+                }
+                outputVerb = outputVerb + "en";
+                break;
+
         }
         return outputVerb;
 

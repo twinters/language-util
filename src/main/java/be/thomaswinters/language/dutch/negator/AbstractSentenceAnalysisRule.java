@@ -1,15 +1,15 @@
 package be.thomaswinters.language.dutch.negator;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.languagetool.AnalyzedSentence;
 import org.languagetool.AnalyzedTokenReadings;
 import org.languagetool.ILanguageTool;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class AbstractSentenceAnalysisRule implements NegatorRule {
     private final ILanguageTool languageTool;
@@ -24,13 +24,7 @@ public abstract class AbstractSentenceAnalysisRule implements NegatorRule {
         if (answers.isEmpty()) {
             return new ArrayList<>();
         }
-        if (answers.size() > 1) {
-            throw new NotImplementedException("Multi sentence negation is currently unsupported");
-        }
-
-        // Get the first word
-        AnalyzedSentence sentence = answers.get(0);
-        return Arrays.asList(sentence.getTokens());
+        return answers.stream().flatMap(e -> Stream.of(e.getTokens())).collect(Collectors.toList());
     }
 
 
