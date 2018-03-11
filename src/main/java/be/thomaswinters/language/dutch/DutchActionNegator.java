@@ -1,6 +1,6 @@
 package be.thomaswinters.language.dutch;
 
-import be.thomaswinters.language.dutch.negator.NietInput;
+import be.thomaswinters.language.dutch.negator.NietInputRule;
 import org.languagetool.AnalyzedSentence;
 import org.languagetool.AnalyzedTokenReadings;
 import org.languagetool.JLanguageTool;
@@ -87,7 +87,7 @@ public class DutchActionNegator {
 
 
         System.out.println("-- DEFAULT");
-        return new NietInput().negateAction(input).get();
+        return new NietInputRule().negateAction(input).get();
     }
 
 

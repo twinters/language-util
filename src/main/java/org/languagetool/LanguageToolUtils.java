@@ -51,17 +51,21 @@ public class LanguageToolUtils {
     }
 
     public static AnalyzedSentence replaceToken(List<AnalyzedTokenReadings> tokens, int index, String newToken) {
-
         List<AnalyzedTokenReadings> remainingTokens = new ArrayList<>();
         if (index > 0) {
             remainingTokens.addAll(tokens.subList(0, index));
         }
         remainingTokens.add(new AnalyzedTokenReadings(new AnalyzedToken(newToken, null, null)));
         remainingTokens.addAll(tokens.subList(index + 1, tokens.size()));
-        AnalyzedTokenReadings[] otherTokens = new AnalyzedTokenReadings[remainingTokens.size()];
-        remainingTokens.toArray(otherTokens);
-        AnalyzedSentence sentenceWithoutFirstToken = new AnalyzedSentence(otherTokens);
 
-        return sentenceWithoutFirstToken;
+        return toSentence(remainingTokens);
+    }
+
+    public static AnalyzedSentence toSentence(List<AnalyzedTokenReadings> tokens) {
+
+        AnalyzedTokenReadings[] otherTokens = new AnalyzedTokenReadings[tokens.size()];
+        tokens.toArray(otherTokens);
+        return new AnalyzedSentence(otherTokens);
+
     }
 }
