@@ -1,4 +1,4 @@
-package stringmorpher;
+package be.thomaswinters.language.stringmorpher;
 
 public class Decapitaliser {
 
