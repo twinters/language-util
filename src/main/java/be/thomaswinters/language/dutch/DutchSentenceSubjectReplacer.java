@@ -179,10 +179,14 @@ public class DutchSentenceSubjectReplacer {
             case FIRST_PLURAL:
             case SECOND_PLURAL:
             case THIRD_PLURAL:
-                if (outputVerb.charAt(outputVerb.length() - 1) == 't' && outputVerb.charAt(outputVerb.length() - 2) != 't') {
-                    outputVerb = outputVerb.substring(0, outputVerb.length() - 1);
+                if (inputVerb.getToken().equals("bent")) {
+                    outputVerb = "zijn";
+                } else {
+                    if (outputVerb.charAt(outputVerb.length() - 1) == 't' && outputVerb.charAt(outputVerb.length() - 2) != 't') {
+                        outputVerb = outputVerb.substring(0, outputVerb.length() - 1);
+                    }
+                    outputVerb = outputVerb + "en";
                 }
-                outputVerb = outputVerb + "en";
                 break;
 
         }

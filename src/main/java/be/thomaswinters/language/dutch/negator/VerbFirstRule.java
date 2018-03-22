@@ -18,7 +18,7 @@ public class VerbFirstRule extends AbstractFirstWordRule {
         // If it starts with a noun
         List<String> tags = LanguageToolUtils.getTags(firstToken);
         if (tags.stream().anyMatch(tag -> tag.startsWith("VBi"))) {
-            System.out.println(tags);
+//            System.out.println(tags);
             System.out.println("-- Werkwoord");
             return Optional.of("niet " + LanguageToolUtils.toSentence(tokens).getText());
         }
