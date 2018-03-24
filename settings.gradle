@@ -1,2 +1,4 @@
+include ':text-util'
+project(':text-util').projectDir = new File(settingsDir, '../text-util')
 rootProject.name = 'language-util'
 

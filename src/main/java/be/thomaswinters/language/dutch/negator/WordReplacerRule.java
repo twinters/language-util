@@ -1,46 +1,32 @@
 package be.thomaswinters.language.dutch.negator;
 
-import com.google.common.collect.ImmutableSet;
-import org.languagetool.AnalyzedTokenReadings;
-import org.languagetool.ILanguageTool;
-import org.languagetool.LanguageToolUtils;
+import be.thomaswinters.replacement.Replacer;
+import be.thomaswinters.sentence.SentenceUtil;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class WordReplacerRule extends AbstractSentenceAnalysisRule {
+public class WordReplacerRule extends AReplacerNegator {
 
-    private final String searchWord;
+    private final List<String> searchWords;
     private final String replacementWord;
-    private final Set<String> previousWordBlacklist;
 
-    public WordReplacerRule(ILanguageTool languageTool, String searchWord, String replacementWord, Collection<? extends String> previousWordBlacklist) {
-        super(languageTool);
-        this.searchWord = searchWord;
+    public WordReplacerRule(List<String> searchWords, String replacementWord) {
+        this.searchWords = searchWords;
         this.replacementWord = replacementWord;
-        this.previousWordBlacklist = ImmutableSet.copyOf(previousWordBlacklist);
     }
 
-    public WordReplacerRule(ILanguageTool languageTool, String searchWord, String replacementWord) {
-        this(languageTool, searchWord, replacementWord, new ArrayList<>());
+    public WordReplacerRule(String searchWord, String replacementWord) {
+        this(Arrays.asList(searchWord), replacementWord);
     }
 
     @Override
-    public Optional<String> negateAction(String input) throws IOException, ExecutionException {
-        List<AnalyzedTokenReadings> tokens = getTokens(input);
-        Optional<AnalyzedTokenReadings> firstSearchElement = tokens.stream().filter(token -> token.getToken().toLowerCase().equals(searchWord)).
-                findFirst();
-        if (firstSearchElement.isPresent()) {
-            int elementIdx = tokens.indexOf(firstSearchElement.get());
-            Optional<AnalyzedTokenReadings> previousWord = LanguageToolUtils.previousWordToken(elementIdx, tokens);
-            // If not blacklisted previous word:
-            if (!previousWord.isPresent() || !previousWordBlacklist.contains(previousWord.get().getToken().toLowerCase())) {
-                System.out.println("-- " + searchWord.toUpperCase());
-                return Optional.of(LanguageToolUtils.replaceToken(tokens, elementIdx, replacementWord).getText());
-            }
-        }
-
-        return Optional.empty();
+    protected List<Replacer> getPossibleReplacers(String input) {
+        return SentenceUtil.getWords(input).stream()
+                .map(word -> word.toLowerCase().trim())
+                .filter(word -> searchWords.contains(word))
+                .map(word -> new Replacer(word, replacementWord, false, true))
+                .collect(Collectors.toList());
     }
 }

@@ -20,9 +20,12 @@ public class CascadeNegatorRule implements NegatorRule {
     private Optional<String> negateActionUnchecked(NegatorRule rule, String input) {
         try {
             return rule.negateAction(input);
-        } catch (Exception e1) {
-            e1.printStackTrace();
-            throw new RuntimeException(e1);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
