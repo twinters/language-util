@@ -11,11 +11,12 @@ import java.util.concurrent.ExecutionException;
 public abstract class AReplacerNegator implements NegatorRule {
     @Override
     public Optional<String> negateAction(String input) throws IOException, ExecutionException {
-        List<Replacer> antonymReplacers = getPossibleReplacers(input);
+        List<Replacer> possibleReplacers = getPossibleReplacers(input);
+        System.out.println(this + ", replacers: " + possibleReplacers);
 
-        if (!antonymReplacers.isEmpty()) {
-            System.out.println("-- Possible antonyms: " + antonymReplacers);
-            Replacer chosenReplacer = Picker.pick(antonymReplacers);
+        if (!possibleReplacers.isEmpty()) {
+            System.out.println("-- Possible antonyms: " + possibleReplacers);
+            Replacer chosenReplacer = Picker.pick(possibleReplacers);
             String output = chosenReplacer.replace(input);
             if (!output.equals(input)) {
                 System.out.println("-- Antonym");

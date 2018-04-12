@@ -18,7 +18,7 @@ public class ReplacerFilterNegator extends AReplacerNegator {
     @Override
     protected List<Replacer> getPossibleReplacers(String input) {
         return replacerNegator.getPossibleReplacers(input).stream()
-                .filter(replacer -> prohibitedWords.contains(replacer.getWord().toLowerCase().trim()))
+                .filter(replacer -> !prohibitedWords.contains(replacer.getWord().toLowerCase().trim()))
                 .collect(Collectors.toList());
     }
 }
