@@ -15,6 +15,6 @@ dependencies {
     compile 'org.languagetool:language-nl:3.4'
     compile 'org.apache.commons:commons-csv:1.5'
     compile 'org.apache.commons:commons-lang3:3.3.1'
-    compile 'com.google.guava:guava:11.0.2'
+    compile 'com.google.guava:guava:19.0'
     compile project(':text-util')
 }
