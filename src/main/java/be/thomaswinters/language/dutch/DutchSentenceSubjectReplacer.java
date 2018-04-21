@@ -13,6 +13,7 @@ import java.util.*;
 
 public class DutchSentenceSubjectReplacer {
 
+
     private static final String SECOND_PERSON_SINGULAR = "je";
     private static final String SECOND_PERSON_SINGULAR_OBJECT = "jou";
     private static final String SECOND_PERSON_SINGULAR_REFLECTIVE = "jezelf";

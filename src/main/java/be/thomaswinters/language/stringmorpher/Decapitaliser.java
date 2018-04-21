@@ -1,8 +1,7 @@
 package be.thomaswinters.language.stringmorpher;
 
 public class Decapitaliser {
-
-    public static final String decapitaliseFirstLetter(String input) {
+    public static String decapitaliseFirstLetter(String input) {
         if (input.length() == 0) {
             return input;
         }
