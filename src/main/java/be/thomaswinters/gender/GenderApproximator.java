@@ -1,4 +1,4 @@
-package gender;
+package be.thomaswinters.gender;
 
 import com.google.gson.Gson;
 
