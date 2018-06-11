@@ -1,6 +1,8 @@
 package be.thomaswinters.gender;
 
+import be.thomaswinters.sentence.SentenceUtil;
 import com.google.gson.Gson;
+import org.apache.commons.lang3.text.WordUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -14,7 +16,17 @@ public class GenderApproximator {
 
     private final Gson gson = new Gson();
 
+    private String filterName(String name) {
+        return WordUtils.capitalizeFully(SentenceUtil.removeNonLetters(name.toLowerCase()));
+    }
+
     public Gender approximateGender(String firstName, String lastName) throws Exception {
+        if (lastName != null) {
+            lastName = filterName(lastName);
+        }
+        if (firstName != null) {
+            firstName = filterName(firstName);
+        }
         if (lastName == null || lastName.trim().equals("")) {
             lastName = "*";
         }
