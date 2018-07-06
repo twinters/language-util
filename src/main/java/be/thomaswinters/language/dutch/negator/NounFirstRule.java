@@ -25,7 +25,7 @@ public class NounFirstRule extends AbstractFirstWordRule {
     protected Optional<String> negateAction(List<AnalyzedTokenReadings> tokens, int firstTokenIdx, AnalyzedTokenReadings firstToken) {
         // If it starts with a noun
         List<String> tags = LanguageToolUtils.getTags(firstToken);
-        if (tags.stream().anyMatch(tag -> tag.startsWith(languageTags.getNounTagStart()))) {
+        if (tags.stream().anyMatch(languageTags::isNounTagStart)) {
             System.out.println("-- Substantief");
             return Optional.of("geen " + LanguageToolUtils.toSentence(tokens).getText());
         }

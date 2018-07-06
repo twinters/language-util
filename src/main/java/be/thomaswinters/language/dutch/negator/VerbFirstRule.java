@@ -27,7 +27,7 @@ public class VerbFirstRule extends AbstractFirstWordRule {
     protected Optional<String> negateAction(List<AnalyzedTokenReadings> tokens, int firstTokenIdx, AnalyzedTokenReadings firstToken) {
         // If it starts with a noun
         List<String> tags = LanguageToolUtils.getTags(firstToken);
-        if (tags.stream().anyMatch(tag -> tag.startsWith(languageTags.getInfinitiveVerbTagStart()))) {
+        if (tags.stream().anyMatch(languageTags::isInfinitiveVerbTagStart)) {
 //            System.out.println(tags);
             System.out.println("-- Werkwoord");
             return Optional.of("niet " + LanguageToolUtils.toSentence(tokens).getText());
