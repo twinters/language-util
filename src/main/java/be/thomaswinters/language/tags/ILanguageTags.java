@@ -17,6 +17,8 @@ public interface ILanguageTags {
 
     String getPronounOStart();
 
+    String getAdjectiveStart();
+
     default boolean isNounTagStart(String input) {
         return input.startsWith(getNounTagStart());
     }
@@ -48,4 +50,9 @@ public interface ILanguageTags {
     default boolean isPronounOStart(String input) {
         return input.startsWith(getPronounOStart());
     }
+
+    default boolean isAdjectiveTag(String input) {
+        return input.startsWith(getAdjectiveStart());
+    }
+
 }

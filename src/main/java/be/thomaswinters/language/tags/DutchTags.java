@@ -36,14 +36,8 @@ public class EnglishTags implements ILanguageTags {
         return "PNo";
     }
 
-
     @Override
     public String getInfinitiveVerbTagStart() {
         return "VBi";
-    }
-
-    @Override
-    public String getAdjectiveStart() {
-        return "AJ";
     }
 }
