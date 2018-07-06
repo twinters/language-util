@@ -19,16 +19,12 @@ public class NounReplacementUtilTest {
 
     @Test
     public void replaceANoun_test() throws IOException {
-        assertEquals("e", replaceNoun("appel"));
-        assertEquals("een e", replaceNoun("een appel"));
+        assertEquals("e", replaceAllNouns("appel"));
+        assertEquals("een e", replaceAllNouns("een appel"));
     }
 
-    public String replaceNoun(String input) throws IOException {
-        Optional<String> result = nounReplacementUtil.replaceANoun(input, "e", "m");
-        if (!result.isPresent()) {
-            fail("No result for " + input);
-        }
-        return result.get();
+    public String replaceAllNouns(String input) throws IOException {
+        return nounReplacementUtil.replaceAllNouns(input, "e", "m");
     }
 
 }

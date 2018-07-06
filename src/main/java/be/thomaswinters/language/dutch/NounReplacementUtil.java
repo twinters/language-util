@@ -1,5 +1,7 @@
 package be.thomaswinters.language.dutch;
 
+import be.thomaswinters.language.tags.EnglishTags;
+import be.thomaswinters.language.tags.ILanguageTags;
 import be.thomaswinters.replacement.Replacer;
 import com.google.common.collect.ImmutableList;
 import org.languagetool.AnalyzedSentence;
@@ -54,7 +56,15 @@ public class NounReplacementUtil {
             "los", "vol", "uit"));
     private static final Random random = new Random();
     private final JLanguageTool langTool = new JLanguageTool(new Dutch());
+    private final ILanguageTags languageTags;
 
+    public NounReplacementUtil(ILanguageTags languageTags) {
+        this.languageTags = languageTags;
+    }
+
+    public NounReplacementUtil() {
+        this(new EnglishTags());
+    }
     /*-********************************************-*
      *  Util
      *-********************************************-*/
@@ -66,12 +76,12 @@ public class NounReplacementUtil {
 
     public boolean isNoun(AnalyzedTokenReadings token, List<String> tags) {
         return !NOUN_BLACKLIST.contains(token.getToken().toLowerCase()) && token.getToken().length() > 1
-                && tags.stream().anyMatch(e -> e.startsWith("NN"));
+                && tags.stream().anyMatch(e -> e.startsWith(languageTags.getNounTagStart()));
     }
 
     public boolean isVerb(AnalyzedTokenReadings token, List<String> tags) {
         return !VERB_BLACKLIST.contains(token.getToken().toLowerCase()) && token.getToken().length() > 1
-                && tags.stream().anyMatch(e -> e.startsWith("VB"));
+                && tags.stream().anyMatch(e -> e.startsWith(languageTags.getVerbTagStart()));
     }
 
     public Stream<Replacer> getNounReplacers(String input, String replacementSingular, String replacementPlural) throws IOException {
@@ -90,11 +100,11 @@ public class NounReplacementUtil {
                  */ {
 
                     // Plural Noun
-                    if (tags.stream().anyMatch(e -> e.startsWith("NN2"))) {
+                    if (tags.stream().anyMatch(e -> e.startsWith(languageTags.getPluralNounTag()))) {
                         replacerList.add(new Replacer(token.getToken(), replacementPlural, true, false));
                     }
                     // Singular Noun
-                    else if (tags.stream().anyMatch(e -> e.startsWith("NN1"))) {
+                    else if (tags.stream().anyMatch(e -> e.startsWith(languageTags.getSingularNounTag()))) {
                         replacerList.add(new Replacer(token.getToken(), replacementSingular, true, false));
                     }
                 }
@@ -126,6 +136,11 @@ public class NounReplacementUtil {
         Replacer chosenReplacer = replacerList.get(random.nextInt(replacerList.size()));
 
         return Optional.of(applyReplacer(input, chosenReplacer, replacementSingular));
+    }
+
+    public String replaceAllNouns(String input, String replacementSingular, String replacementPlural) throws IOException {
+        return getNounReplacers(input, replacementSingular, replacementPlural)
+                .reduce(input, (s, r) -> r.replace(s), (e,f)-> {throw new IllegalArgumentException();});
     }
 
     public int calculateAmountOfSpellingMistakes(String text) {
