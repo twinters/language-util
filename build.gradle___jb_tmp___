@@ -20,7 +20,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
 
     compile group: 'org.languagetool', name: 'language-nl', version: '4.1'
-
     compile group: 'org.apache.opennlp', name: 'opennlp-tools', version: '1.8.4'
+
     compile project(':text-util')
 }

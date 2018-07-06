@@ -1,0 +1,6 @@
+package be.thomaswinters.language.pos.data;
+
+public enum POStag {
+    CONJUNCTION, PUNCTUATION, NOUN, VERB, ARTICLE, ADJECTIVE, PREPOSITION, PRONOUN, ADVERB, NUMBER, MISCELLANEOUS, INTERJECTION
+
+}
