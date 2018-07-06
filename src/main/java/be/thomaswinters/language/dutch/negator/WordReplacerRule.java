@@ -4,6 +4,7 @@ import be.thomaswinters.replacement.Replacer;
 import be.thomaswinters.sentence.SentenceUtil;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,14 +19,14 @@ public class WordReplacerRule extends AReplacerNegator {
     }
 
     public WordReplacerRule(String searchWord, String replacementWord) {
-        this(Arrays.asList(searchWord), replacementWord);
+        this(Collections.singletonList(searchWord), replacementWord);
     }
 
     @Override
     protected List<Replacer> getPossibleReplacers(String input) {
         return SentenceUtil.getWords(input).stream()
                 .map(word -> word.toLowerCase().trim())
-                .filter(word -> searchWords.contains(word))
+                .filter(searchWords::contains)
                 .map(word -> new Replacer(word, replacementWord, false, true))
                 .collect(Collectors.toList());
     }

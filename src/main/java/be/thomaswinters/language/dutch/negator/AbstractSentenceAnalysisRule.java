@@ -24,7 +24,9 @@ public abstract class AbstractSentenceAnalysisRule implements NegatorRule {
         if (answers.isEmpty()) {
             return new ArrayList<>();
         }
-        return answers.stream().flatMap(e -> Stream.of(e.getTokens())).collect(Collectors.toList());
+        return answers.stream()
+                .flatMap(e -> Stream.of(e.getTokens()))
+                .collect(Collectors.toList());
     }
 
 
