@@ -12,4 +12,6 @@ public interface ILanguageTags {
     String getSecondPersonVerbTag();
 
     String getPronounOStart();
+
+    String getInfinitiveVerbTagStart();
 }

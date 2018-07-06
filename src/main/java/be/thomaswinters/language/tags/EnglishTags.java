@@ -35,4 +35,9 @@ public class EnglishTags implements ILanguageTags {
     public String getPronounOStart() {
         return "PNo";
     }
+
+    @Override
+    public String getInfinitiveVerbTagStart() {
+        return "VBi";
+    }
 }
