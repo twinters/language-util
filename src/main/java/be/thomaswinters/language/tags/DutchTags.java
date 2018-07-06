@@ -1,43 +1,48 @@
 package be.thomaswinters.language.tags;
 
-public class EnglishTags implements ILanguageTags {
+public class DutchTags implements ILanguageTags {
     @Override
     public String getNounTagStart() {
-        return "NN";
+        return "ZNW";
     }
 
     @Override
     public String getVerbTagStart() {
-        return "VB";
+        return "WKW";
     }
 
     @Override
     public String getSingularNounTag() {
-        return "NN1";
+        return "ZNW:EKV";
     }
 
     @Override
     public String getPluralNounTag() {
-        return "NN2";
+        return "ZNW:MRV";
     }
 
     @Override
     public String getPronounStart() {
-        return "PN";
+        return "PVW";
     }
 
     @Override
     public String getSecondPersonVerbTag() {
-        return "VB2";
+        return "WKW:TGW:2EP";
     }
 
     @Override
     public String getPronounOStart() {
-        return "PNo";
+        return "PVW:3PS";
     }
+
 
     @Override
     public String getInfinitiveVerbTagStart() {
-        return "VBi";
+        return "WKW:TGW:INF";
+    }
+    @Override
+    public String getAdjectiveStart() {
+        return "BNW";
     }
 }

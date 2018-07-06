@@ -1,6 +1,6 @@
 package be.thomaswinters.language.dutch.negator;
 
-import be.thomaswinters.language.tags.EnglishTags;
+import be.thomaswinters.language.tags.DutchTags;
 import be.thomaswinters.language.tags.ILanguageTags;
 import org.languagetool.AnalyzedTokenReadings;
 import org.languagetool.ILanguageTool;
@@ -19,7 +19,7 @@ public class VerbFirstRule extends AbstractFirstWordRule {
     }
 
     public VerbFirstRule(ILanguageTool languageTool) {
-        this(languageTool, new EnglishTags());
+        this(languageTool, new DutchTags());
     }
 
 
