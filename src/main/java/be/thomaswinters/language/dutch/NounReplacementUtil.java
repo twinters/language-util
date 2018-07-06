@@ -12,7 +12,10 @@ import org.languagetool.language.Dutch;
 import org.languagetool.rules.RuleMatch;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -87,30 +90,31 @@ public class NounReplacementUtil {
     public Stream<Replacer> getNounReplacers(String input, String replacementSingular, String replacementPlural) throws IOException {
         List<AnalyzedSentence> answers = langTool.analyzeText(input);
 
-        return answers.stream().flatMap(analyzedSentence -> {
-            List<Replacer> replacerList = new ArrayList<>();
-            List<AnalyzedTokenReadings> tokens = Arrays.asList(analyzedSentence.getTokens());
-            for (AnalyzedTokenReadings token : tokens) {
+        return answers.stream().flatMap(analyzedSentence -> Stream.of(analyzedSentence.getTokens())
+                .map(token -> {
 
-                List<String> tags = getTags(token);
+                    List<String> tags = getTags(token);
 
-                // Check if noun
-                if (isNoun(token, tags)) /*
-                 * && !tags.stream().anyMatch(e -> e.startsWith("VB"))
-                 */ {
+                    // Check if noun
+                    if (isNoun(token, tags)) /*
+                     * && !tags.stream().anyMatch(e -> e.startsWith("VB"))
+                     */ {
 
-                    // Plural Noun
-                    if (tags.stream().anyMatch(e -> e.startsWith(languageTags.getPluralNounTag()))) {
-                        replacerList.add(new Replacer(token.getToken(), replacementPlural, true, false));
+                        // Plural Noun
+                        if (tags.stream().anyMatch(languageTags::isPluralNounTag)) {
+                            return Optional.of(
+                                    new Replacer(token.getToken(), replacementPlural, true, false));
+                        }
+                        // Singular Noun
+                        else if (tags.stream().anyMatch(languageTags::isSingularNounTag)) {
+                            return Optional.of(
+                                    new Replacer(token.getToken(), replacementSingular, true, false));
+                        }
                     }
-                    // Singular Noun
-                    else if (tags.stream().anyMatch(e -> e.startsWith(languageTags.getSingularNounTag()))) {
-                        replacerList.add(new Replacer(token.getToken(), replacementSingular, true, false));
-                    }
-                }
-            }
-            return replacerList.stream();
-        });
+                    return Optional.<Replacer>empty();
+                }))
+                .filter(Optional::isPresent)
+                .map(Optional::get);
     }
 
     public String applyReplacer(String input, Replacer replacer, String replacementSingular) {
@@ -138,9 +142,12 @@ public class NounReplacementUtil {
         return Optional.of(applyReplacer(input, chosenReplacer, replacementSingular));
     }
 
-    public String replaceAllNouns(String input, String replacementSingular, String replacementPlural) throws IOException {
+    public String replaceAllNouns(String input, String replacementSingular, String replacementPlural) throws
+            IOException {
         return getNounReplacers(input, replacementSingular, replacementPlural)
-                .reduce(input, (s, r) -> r.replace(s), (e,f)-> {throw new IllegalArgumentException();});
+                .reduce(input, (s, r) -> r.replace(s), (e, f) -> {
+                    throw new IllegalArgumentException();
+                });
     }
 
     public int calculateAmountOfSpellingMistakes(String text) {

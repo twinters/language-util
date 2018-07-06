@@ -2,39 +2,50 @@ package be.thomaswinters.language.tags;
 
 public interface ILanguageTags {
     String getNounTagStart();
-    String getVerbTagStart();
 
     String getSingularNounTag();
+
     String getPluralNounTag();
 
-    String getPronounStart();
+    String getVerbTagStart();
 
     String getSecondPersonVerbTag();
 
+    String getInfinitiveVerbTagStart();
+
+    String getPronounStart();
+
     String getPronounOStart();
 
-    String getInfinitiveVerbTagStart();
     default boolean isNounTagStart(String input) {
-        return input.startsWith(getNounTagStart());}
+        return input.startsWith(getNounTagStart());
+    }
 
     default boolean isSingularNounTag(String input) {
-        return input.startsWith(getSingularNounTag());}
+        return input.startsWith(getSingularNounTag());
+    }
 
     default boolean isPluralNounTag(String input) {
-        return input.startsWith(getPluralNounTag());}
+        return input.startsWith(getPluralNounTag());
+    }
 
     default boolean isVerbTagStart(String input) {
-        return input.startsWith(getVerbTagStart());}
+        return input.startsWith(getVerbTagStart());
+    }
 
     default boolean isSecondPersonVerbTag(String input) {
-        return input.startsWith(getSecondPersonVerbTag());}
+        return input.startsWith(getSecondPersonVerbTag());
+    }
 
     default boolean isInfinitiveVerbTagStart(String input) {
-        return input.startsWith(getInfinitiveVerbTagStart());}
+        return input.startsWith(getInfinitiveVerbTagStart());
+    }
 
     default boolean isPronounStart(String input) {
-        return input.startsWith(getPronounStart());}
+        return input.startsWith(getPronounStart());
+    }
 
     default boolean isPronounOStart(String input) {
-        return input.startsWith(getPronounOStart());}
+        return input.startsWith(getPronounOStart());
+    }
 }
