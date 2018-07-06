@@ -1,6 +1,8 @@
 package be.thomaswinters.language.dutch;
 
 import be.thomaswinters.language.SubjectType;
+import be.thomaswinters.language.tags.EnglishTags;
+import be.thomaswinters.language.tags.ILanguageTags;
 import org.apache.commons.lang.StringUtils;
 import org.languagetool.AnalyzedSentence;
 import org.languagetool.AnalyzedTokenReadings;
@@ -22,8 +24,20 @@ public class DutchSentenceSubjectReplacer {
 
     private static final List<String> ignoreWords = Arrays.asList("niet", "aan", "voor", "wel", "thuis", "in");
     private static final List<String> stopWords = Arrays.asList("een");
+    private static final List<String> secondPersonVerbs = Arrays.asList("bent", "wordt", "gaat");
+    private final ILanguageTags languageTags;
+    private List<Character> vowels = Arrays.asList('a', 'e', 'i', 'o', 'u');
 
-    public String replaceSecondPerson(String input, String newSubject, String newObsessive, String newObject, String reflective, SubjectType type) throws IOException {
+    public DutchSentenceSubjectReplacer(ILanguageTags languageTags) {
+        this.languageTags = languageTags;
+    }
+
+    public DutchSentenceSubjectReplacer() {
+        this(new EnglishTags());
+    }
+
+    public String replaceSecondPerson(String input, String newSubject, String newObsessive,
+                                      String newObject, String reflective, SubjectType type) throws IOException {
 
 
         List<AnalyzedSentence> answers = LANGUAGE_TOOL.analyzeText(input);
@@ -130,7 +144,7 @@ public class DutchSentenceSubjectReplacer {
 //
 //
 //                                    }
-                                else if (nextWordTokenTags.stream().anyMatch(tag -> tag.startsWith("NN")) || isEntity(nextWordToken)) {
+                                else if (nextWordTokenTags.stream().anyMatch(tag -> tag.startsWith(languageTags.getNounTagStart())) || isEntity(nextWordToken)) {
 //                                        System.out.println("Noun (possibly after adjectives): must be obsessive!");
                                     textToAdd = newObsessive;
                                 } else if (couldBeSecondPersonVerb(nextWordToken, nextWordTokenTags)) {
@@ -139,10 +153,10 @@ public class DutchSentenceSubjectReplacer {
                                     // Change verb
                                     plannedReplacements.put(nextWordTokenIdx.get(), getNewVerb(nextWordToken, type));
 
-                                } else if (nextWordTokenTags.stream().anyMatch(tag -> tag.startsWith("VB"))) {
+                                } else if (nextWordTokenTags.stream().anyMatch(tag -> tag.startsWith(languageTags.getVerbTagStart()))) {
 //                                        System.out.println("Another verb");
                                     textToAdd = newObject;
-                                } else if (nextWordTokenTags.stream().anyMatch(tag -> tag.startsWith("PN"))) {
+                                } else if (nextWordTokenTags.stream().anyMatch(tag -> tag.startsWith(languageTags.getPronounStart()))) {
 //                                        System.out.println("A pronoun: subject!");
                                     textToAdd = newSubject;
                                 }
@@ -161,8 +175,6 @@ public class DutchSentenceSubjectReplacer {
 
         return replacementBuilder.toString();
     }
-
-    private List<Character> vowels = Arrays.asList('a', 'e', 'i', 'o', 'u');
 
     private String getNewVerb(AnalyzedTokenReadings inputVerb, SubjectType type) {
         String outputVerb = inputVerb.getToken();
@@ -195,11 +207,8 @@ public class DutchSentenceSubjectReplacer {
 
     }
 
-
-    private static final List<String> secondPersonVerbs = Arrays.asList("bent", "wordt", "gaat");
-
     private boolean couldBeSecondPersonVerb(AnalyzedTokenReadings nextWordToken, List<String> nextWordTokenTags) {
-        return nextWordTokenTags.stream().anyMatch(tag -> tag.startsWith("VB2"))
+        return nextWordTokenTags.stream().anyMatch(tag -> tag.startsWith(languageTags.getSecondPersonVerbTag()))
                 || secondPersonVerbs.contains(nextWordToken.getToken().toLowerCase());
     }
 
@@ -207,7 +216,7 @@ public class DutchSentenceSubjectReplacer {
     // CHECK IF PROPRETARY
     private boolean isEntity(AnalyzedTokenReadings token) {
         List<String> tags = LanguageToolUtils.getTags(token);
-        if (tags.stream().anyMatch(tag -> tag.startsWith("PNo")) ||
+        if (tags.stream().anyMatch(tag -> tag.startsWith(languageTags.getPronounOStart())) ||
                 // Has uppercase somewhere
                 !token.getToken().toLowerCase().equals(token.getToken())) {
             return true;

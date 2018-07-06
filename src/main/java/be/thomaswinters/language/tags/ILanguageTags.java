@@ -6,4 +6,10 @@ public interface ILanguageTags {
 
     String getSingularNounTag();
     String getPluralNounTag();
+
+    String getPronounStart();
+
+    String getSecondPersonVerbTag();
+
+    String getPronounOStart();
 }

@@ -20,4 +20,19 @@ public class EnglishTags implements ILanguageTags {
     public String getPluralNounTag() {
         return "NN2";
     }
+
+    @Override
+    public String getPronounStart() {
+        return "PN";
+    }
+
+    @Override
+    public String getSecondPersonVerbTag() {
+        return "VB2";
+    }
+
+    @Override
+    public String getPronounOStart() {
+        return "PNo";
+    }
 }
