@@ -12,6 +12,7 @@ import org.languagetool.rules.RuleMatch;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class NounReplacementUtil {
     public static final List<String> NOUN_BLACKLIST = ImmutableList.copyOf(Arrays.asList(
@@ -73,14 +74,11 @@ public class NounReplacementUtil {
                 && tags.stream().anyMatch(e -> e.startsWith("VB"));
     }
 
-    public static Optional<String> replaceANoun(String input, String replacementSingular, String replacementPlural)
-            throws IOException {
-
+    public static Stream<Replacer> getNounReplacers(String input, String replacementSingular, String replacementPlural) throws IOException {
         List<AnalyzedSentence> answers = langTool.analyzeText(input);
 
-        List<Replacer> replacerList = new ArrayList<>();
-
-        for (AnalyzedSentence analyzedSentence : answers) {
+        return answers.stream().flatMap(analyzedSentence -> {
+            List<Replacer> replacerList = new ArrayList<>();
             List<AnalyzedTokenReadings> tokens = Arrays.asList(analyzedSentence.getTokens());
             for (AnalyzedTokenReadings token : tokens) {
 
@@ -101,7 +99,24 @@ public class NounReplacementUtil {
                     }
                 }
             }
-        }
+            return replacerList.stream();
+        });
+    }
+
+    public static String applyReplacer(String input, Replacer replacer, String replacementSingular) {
+        Replacer articleReplacer = new Replacer("het " + replacer.getWord(), "de " + replacementSingular, true,
+                false);
+
+        return articleReplacer.replace(replacer.replace(input));
+
+
+    }
+
+    public static Optional<String> replaceANoun(String input, String replacementSingular, String replacementPlural)
+            throws IOException {
+
+        List<Replacer> replacerList = getNounReplacers(input, replacementSingular, replacementPlural)
+                .collect(Collectors.toList());
 
         if (replacerList.isEmpty()) {
             return Optional.empty();
@@ -109,14 +124,8 @@ public class NounReplacementUtil {
 
         // Replacers replacers = new Replacers(replacerList);
         Replacer chosenReplacer = replacerList.get(random.nextInt(replacerList.size()));
-        Replacer articleReplacer = new Replacer("het " + chosenReplacer.getWord(), "de " + replacementSingular, true,
-                false);
 
-        String result = articleReplacer.replace(chosenReplacer.replace(input));
-
-        System.out.println("\n" + replacerList + "\n" + result);
-
-        return Optional.of(result);
+        return Optional.of(applyReplacer(input, chosenReplacer, replacementSingular));
     }
 
     public static int calculateAmountOfSpellingMistakes(String text) {
