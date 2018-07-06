@@ -19,7 +19,7 @@ public abstract class AbstractFirstWordRule extends AbstractSentenceAnalysisRule
     }
 
     protected Optional<AnalyzedTokenReadings> getFirstToken(List<AnalyzedTokenReadings> tokens) {
-        return getFirstTokenIndex(tokens).map(e -> tokens.get(e));
+        return getFirstTokenIndex(tokens).map(tokens::get);
     }
 
 

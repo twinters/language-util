@@ -3,6 +3,7 @@ package be.thomaswinters.language.dutch;
 import be.thomaswinters.replacement.Replacer;
 import com.google.common.collect.ImmutableList;
 import org.languagetool.AnalyzedSentence;
+import org.languagetool.AnalyzedToken;
 import org.languagetool.AnalyzedTokenReadings;
 import org.languagetool.JLanguageTool;
 import org.languagetool.language.Dutch;
@@ -13,10 +14,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class NounReplacementUtil {
-    private static final Random random = new Random();
-
-    private static final JLanguageTool langTool = new JLanguageTool(new Dutch());
-
     public static final List<String> NOUN_BLACKLIST = ImmutableList.copyOf(Arrays.asList(
 
             // Aantallen
@@ -49,20 +46,20 @@ public class NounReplacementUtil {
 
             "waar", "waarom", "hoe", "zij", "woord", "Latijn", "o.a.", "aarde", "beetje", "enkel", "goed", "best",
             "werkende", "meer", "voor", "zit", "echt", "niet", "vragen", "weetje", "keer", "heeft", "des", "la", "le"));
-
     public static final List<String> VERB_BLACKLIST = ImmutableList.copyOf(Arrays.asList(
 
             // Aantallen
             "niet", "vast", "wel", "maar", "zijn", "mijn", "haar", "in", "men", "is", "meer", "lang", "hoog", "eigen",
             "los", "vol", "uit"));
+    private static final Random random = new Random();
+    private static final JLanguageTool langTool = new JLanguageTool(new Dutch());
 
     /*-********************************************-*
      *  Util
      *-********************************************-*/
 
-
     public static List<String> getTags(AnalyzedTokenReadings token) {
-        return token.getReadings().stream().filter(e -> !e.hasNoTag()).map(e -> e.getPOSTag())
+        return token.getReadings().stream().filter(e -> !e.hasNoTag()).map(AnalyzedToken::getPOSTag)
                 .collect(Collectors.toList());
     }
 
