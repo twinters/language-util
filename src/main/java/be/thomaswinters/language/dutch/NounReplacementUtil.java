@@ -48,7 +48,7 @@ public class NounReplacementUtil {
             "puberteit", "geboorte", "wereldoorlog", "geschiedenis", "middeleeuwen", "oudheid", "huwelijk",
 
             // Werkwoorden
-            "tillen", "vliegen",
+            "tillen", "vliegen","moet", "moeten",
 
             "waar", "waarom", "hoe", "zij", "woord", "Latijn", "o.a.", "aarde", "beetje", "enkel", "goed", "best",
             "werkende", "meer", "voor", "zit", "echt", "niet", "vragen", "weetje", "keer", "heeft", "des", "la", "le"));
