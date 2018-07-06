@@ -53,28 +53,28 @@ public class NounReplacementUtil {
             "niet", "vast", "wel", "maar", "zijn", "mijn", "haar", "in", "men", "is", "meer", "lang", "hoog", "eigen",
             "los", "vol", "uit"));
     private static final Random random = new Random();
-    private static final JLanguageTool langTool = new JLanguageTool(new Dutch());
+    private final JLanguageTool langTool = new JLanguageTool(new Dutch());
 
     /*-********************************************-*
      *  Util
      *-********************************************-*/
 
-    public static List<String> getTags(AnalyzedTokenReadings token) {
+    public List<String> getTags(AnalyzedTokenReadings token) {
         return token.getReadings().stream().filter(e -> !e.hasNoTag()).map(AnalyzedToken::getPOSTag)
                 .collect(Collectors.toList());
     }
 
-    public static boolean isNoun(AnalyzedTokenReadings token, List<String> tags) {
+    public boolean isNoun(AnalyzedTokenReadings token, List<String> tags) {
         return !NOUN_BLACKLIST.contains(token.getToken().toLowerCase()) && token.getToken().length() > 1
                 && tags.stream().anyMatch(e -> e.startsWith("NN"));
     }
 
-    public static boolean isVerb(AnalyzedTokenReadings token, List<String> tags) {
+    public boolean isVerb(AnalyzedTokenReadings token, List<String> tags) {
         return !VERB_BLACKLIST.contains(token.getToken().toLowerCase()) && token.getToken().length() > 1
                 && tags.stream().anyMatch(e -> e.startsWith("VB"));
     }
 
-    public static Stream<Replacer> getNounReplacers(String input, String replacementSingular, String replacementPlural) throws IOException {
+    public Stream<Replacer> getNounReplacers(String input, String replacementSingular, String replacementPlural) throws IOException {
         List<AnalyzedSentence> answers = langTool.analyzeText(input);
 
         return answers.stream().flatMap(analyzedSentence -> {
@@ -103,7 +103,7 @@ public class NounReplacementUtil {
         });
     }
 
-    public static String applyReplacer(String input, Replacer replacer, String replacementSingular) {
+    public String applyReplacer(String input, Replacer replacer, String replacementSingular) {
         Replacer articleReplacer = new Replacer("het " + replacer.getWord(), "de " + replacementSingular, true,
                 false);
 
@@ -112,7 +112,7 @@ public class NounReplacementUtil {
 
     }
 
-    public static Optional<String> replaceANoun(String input, String replacementSingular, String replacementPlural)
+    public Optional<String> replaceANoun(String input, String replacementSingular, String replacementPlural)
             throws IOException {
 
         List<Replacer> replacerList = getNounReplacers(input, replacementSingular, replacementPlural)
@@ -128,7 +128,7 @@ public class NounReplacementUtil {
         return Optional.of(applyReplacer(input, chosenReplacer, replacementSingular));
     }
 
-    public static int calculateAmountOfSpellingMistakes(String text) {
+    public int calculateAmountOfSpellingMistakes(String text) {
         List<RuleMatch> matches;
         try {
             matches = langTool.check(text);
