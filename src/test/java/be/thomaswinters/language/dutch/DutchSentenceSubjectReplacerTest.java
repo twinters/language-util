@@ -1,5 +1,6 @@
-package be.thomaswinters.language;
+package be.thomaswinters.language.dutch;
 
+import be.thomaswinters.language.SubjectType;
 import be.thomaswinters.language.dutch.DutchSentenceSubjectReplacer;
 import org.junit.Before;
 import org.junit.Test;
