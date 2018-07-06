@@ -1,9 +1,9 @@
 package be.thomaswinters.language.dutch;
 
 import be.thomaswinters.language.SubjectType;
-import be.thomaswinters.language.tags.EnglishTags;
+import be.thomaswinters.language.tags.DutchTags;
 import be.thomaswinters.language.tags.ILanguageTags;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.languagetool.AnalyzedSentence;
 import org.languagetool.AnalyzedTokenReadings;
 import org.languagetool.JLanguageTool;
@@ -33,7 +33,7 @@ public class DutchSentenceSubjectReplacer {
     }
 
     public DutchSentenceSubjectReplacer() {
-        this(new EnglishTags());
+        this(new DutchTags());
     }
 
     public String replaceSecondPerson(String input, String newSubject, String newObsessive,
@@ -101,7 +101,7 @@ public class DutchSentenceSubjectReplacer {
                             while (nextWordTokenIdx.isPresent() && !stopWords.contains(nextWordToken.getToken()) &&
                                     (
                                             // Is an adjective
-                                            nextWordTokenTags.stream().anyMatch(tag -> tag.startsWith("AJ"))
+                                            nextWordTokenTags.stream().anyMatch(languageTags::isAdjectiveTag)
                                                     // Or not having any tags
                                                     || (!isEntity(nextWordToken) && nextWordTokenTags.isEmpty())
                                                     // Or if we should ignore these words
@@ -144,7 +144,9 @@ public class DutchSentenceSubjectReplacer {
 //
 //
 //                                    }
-                                else if (nextWordTokenTags.stream().anyMatch(languageTags::isNounTagStart) || isEntity(nextWordToken)) {
+                                else if ( (nextWordTokenTags.stream().anyMatch(languageTags::isNounTagStart)
+                                        && !NounReplacementUtil.NOUN_BLACKLIST.contains(nextWordToken.getToken().toLowerCase()))
+                                        || isEntity(nextWordToken)) {
 //                                        System.out.println("Noun (possibly after adjectives): must be obsessive!");
                                     textToAdd = newObsessive;
                                 } else if (couldBeSecondPersonVerb(nextWordToken, nextWordTokenTags)) {

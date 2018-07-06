@@ -1,6 +1,6 @@
 package be.thomaswinters.language.dutch;
 
-import be.thomaswinters.language.tags.EnglishTags;
+import be.thomaswinters.language.tags.DutchTags;
 import be.thomaswinters.language.tags.ILanguageTags;
 import be.thomaswinters.replacement.Replacer;
 import com.google.common.collect.ImmutableList;
@@ -48,10 +48,14 @@ public class NounReplacementUtil {
             "puberteit", "geboorte", "wereldoorlog", "geschiedenis", "middeleeuwen", "oudheid", "huwelijk",
 
             // Werkwoorden
-            "tillen", "vliegen","moet", "moeten",
+            "tillen", "vliegen", "moet", "moeten", "bent", "kunnen", "slapen",
+
+            // Adjectieven
+            "eeuwige", "eeuwig",
 
             "waar", "waarom", "hoe", "zij", "woord", "Latijn", "o.a.", "aarde", "beetje", "enkel", "goed", "best",
-            "werkende", "meer", "voor", "zit", "echt", "niet", "vragen", "weetje", "keer", "heeft", "des", "la", "le"));
+            "werkende", "meer", "voor", "zit", "echt", "niet", "vragen", "weetje", "keer", "heeft", "des", "la", "le",
+            "van"));
     public static final List<String> VERB_BLACKLIST = ImmutableList.copyOf(Arrays.asList(
 
             // Aantallen
@@ -66,7 +70,7 @@ public class NounReplacementUtil {
     }
 
     public NounReplacementUtil() {
-        this(new EnglishTags());
+        this(new DutchTags());
     }
     /*-********************************************-*
      *  Util
@@ -90,6 +94,7 @@ public class NounReplacementUtil {
     public Stream<Replacer> getNounReplacers(String input, String replacementSingular, String replacementPlural) throws IOException {
         List<AnalyzedSentence> answers = langTool.analyzeText(input);
 
+        System.out.println(answers);
         return answers.stream().flatMap(analyzedSentence -> Stream.of(analyzedSentence.getTokens())
                 .map(token -> {
 

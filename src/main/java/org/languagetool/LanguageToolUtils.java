@@ -9,7 +9,7 @@ public class LanguageToolUtils {
 
 
     public static List<String> getTags(AnalyzedTokenReadings token) {
-        return token.getReadings().stream().filter(e -> !e.hasNoTag()).map(e -> e.getPOSTag())
+        return token.getReadings().stream().filter(e -> !e.hasNoTag()).map(AnalyzedToken::getPOSTag)
                 .collect(Collectors.toList());
     }
 
@@ -31,7 +31,7 @@ public class LanguageToolUtils {
     }
 
     public static Optional<AnalyzedTokenReadings> nextWordToken(int i, List<AnalyzedTokenReadings> tokens) {
-        return nextWordTokenIndex(i, tokens).map(idx -> tokens.get(idx));
+        return nextWordTokenIndex(i, tokens).map(tokens::get);
     }
 
     // PREVIOUS WORD
@@ -47,7 +47,7 @@ public class LanguageToolUtils {
     }
 
     public static Optional<AnalyzedTokenReadings> previousWordToken(int i, List<AnalyzedTokenReadings> tokens) {
-        return previousWordTokenIndex(i, tokens).map(idx -> tokens.get(idx));
+        return previousWordTokenIndex(i, tokens).map(tokens::get);
     }
 
     public static AnalyzedSentence replaceToken(List<AnalyzedTokenReadings> tokens, int index, String newToken) {
