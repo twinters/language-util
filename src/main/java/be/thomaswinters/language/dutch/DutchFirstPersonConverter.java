@@ -1,14 +1,19 @@
 package be.thomaswinters.language.dutch;
 
 import be.thomaswinters.sentence.SentenceUtil;
+import be.thomaswinters.util.DataLoader;
 import com.google.common.collect.ImmutableSet;
 
+import java.io.IOException;
 import java.util.stream.Collectors;
 
 public class DutchFirstPersonConverter {
-    private final ImmutableSet<Character> vowels = ImmutableSet.of('a', 'e', 'i', 'o', 'u');
-    private final ImmutableSet<String> tweeklanken = ImmutableSet.of("au", "oe", "ou", "ui", "eu", "ie", "ei", "ai");
+    private final ImmutableSet<String> vowels = ImmutableSet.copyOf(DataLoader.readLines("language-data/vowels.txt"));
+    private final ImmutableSet<String> tweeklanken = ImmutableSet.copyOf(DataLoader.readLines("language-data/tweeklanken.txt"));
     private final ImmutableSet<String> deurtjeOpenUitzonderingen = ImmutableSet.of("komen");
+
+    public DutchFirstPersonConverter() throws IOException {
+    }
 
     public String thirdToFirstPersonPronouns(String bitOfText) {
         return thirdToOtherPersonPronouns(bitOfText, "ik", "mijn", "mij", "mijzelf");
@@ -81,13 +86,13 @@ public class DutchFirstPersonConverter {
 
             // Deurtje open lettertje lopen
             if (result.length() >= 2
-                    && !vowels.contains(result.charAt(result.length() - 1))
-                    && vowels.contains(result.charAt(result.length() - 2))
+                    && !vowels.contains(result.charAt(result.length() - 1) + "")
+                    && vowels.contains(result.charAt(result.length() - 2) + "")
                     && (result.length() >= 3 && !tweeklanken.contains(result.substring(result.length() - 3, result.length() - 1)))
                     // Verdubbel geen i
                     && result.charAt(result.length() - 2) != 'i'
                     // Uitzondering voor 'el'
-                    && !(result.substring(result.length() - 2,result.length() - 1).equals("el"))
+                    && !(result.substring(result.length() - 2, result.length() - 1).equals("el"))
                     ) {
                 if (deurtjeOpenUitzonderingen.stream().noneMatch(verb::endsWith)) {
                     result = result.substring(0, result.length() - 1)
