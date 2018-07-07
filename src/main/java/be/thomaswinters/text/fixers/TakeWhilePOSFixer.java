@@ -36,7 +36,7 @@ public class TakeWhilePOSFixer implements ISentenceFixer {
 
             return lemmas
                     .stream()
-                    .peek(System.out::println)
+//                    .peek(System.out::println)
                     .takeWhile(e -> !stopDefinitionPos.contains(e.getTag())
                             && !stopDefinitionWords.contains(e.getWord()))
                     .map(WordLemmaPOS::getWord)
