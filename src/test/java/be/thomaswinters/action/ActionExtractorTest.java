@@ -57,6 +57,7 @@ public class ActionExtractorTest {
 
 
     }
+
     @Test
     public void voltooid_deelwoord_tests() throws IOException {
         assertEquals(Arrays.asList(
@@ -64,28 +65,31 @@ public class ActionExtractorTest {
                 new ActionDescription("blijven", "")
                 ),
                 actionExtractor.extractAction("Dat betekent op elk moment, blijvend."));
-
-
-
     }
 
-//    @Test
-    public void burgemeester_hard_tests() throws IOException {
-
-        assertEquals(Arrays.asList(
-                new ActionDescription("trainen", "om een ninja te worden"),
-                new ActionDescription("niet trainen", "om een ninja te worden")
-                ),
-                actionExtractor.extractAction("Aheuum. Aheuuuum. Aheum.\n" +
-                        "Aan allen die trainen om een ninja te worden: proficiat.\n" +
-                        "Aan allen die niet trainen om een ninja te worden: ook proficiat."));
-        assertEquals(Arrays.asList(
-                new ActionDescription("verwijderen", "slijm uit hun keel"),
-                new ActionDescription("verwijderen", "slijm aan hun keel")
-                ),
-                actionExtractor.extractAction("Aheuuum. Aheuuuum. Aheum.\n" +
-                        "Aan allen die slijm verwijderen uit hun keel: proficiat.\n" +
-                        "Aan allen die slijm verwijderen aan hun keel: ook proficiat."));
+    @Test
+    public void no_bijzin() throws IOException {
+        assertEquals(Arrays.asList(new ActionDescription("prikken", "iets aan vast")),
+                actionExtractor.extractAction("kleine pen om iets aan vast te prikken"));
     }
+
+//        @Test
+//    public void burgemeester_hard_tests() throws IOException {
+//
+//        assertEquals(Arrays.asList(
+//                new ActionDescription("trainen", "om een ninja te worden"),
+//                new ActionDescription("niet trainen", "om een ninja te worden")
+//                ),
+//                actionExtractor.extractAction("Aheuum. Aheuuuum. Aheum.\n" +
+//                        "Aan allen die trainen om een ninja te worden: proficiat.\n" +
+//                        "Aan allen die niet trainen om een ninja te worden: ook proficiat."));
+//        assertEquals(Arrays.asList(
+//                new ActionDescription("verwijderen", "slijm uit hun keel"),
+//                new ActionDescription("verwijderen", "slijm aan hun keel")
+//                ),
+//                actionExtractor.extractAction("Aheuuum. Aheuuuum. Aheum.\n" +
+//                        "Aan allen die slijm verwijderen uit hun keel: proficiat.\n" +
+//                        "Aan allen die slijm verwijderen aan hun keel: ook proficiat."));
+//    }
 
 }

@@ -18,6 +18,8 @@ import java.util.stream.IntStream;
 public class ActionExtractor {
     private final static Set<String> meaninglessVerbs = Set.of("zijn", "hebben", "worden", "gaan", "zullen", "betekenen");
     private final static Set<String> onderwerpen = Set.of("ik", "jij", "wij", "hij", "zij");
+    private static final Set<String> bijzinBeginners = Set.of("om", "die", "dat");
+    private static final Set<POStag> bijzinBeginnersPOS = Set.of(POStag.CONJUNCTION, POStag.PREPOSITION);
     private final ProbabilisticPosTagger tagger;
 
     public ActionExtractor(ProbabilisticPosTagger tagger) {
@@ -34,6 +36,8 @@ public class ActionExtractor {
                 .filter(i -> wordLemmas.get(i).getTag().equals(POStag.VERB))
                 // Double check if real verb
                 .filter(i -> !wordLemmas.get(i).getLemmas().isEmpty())
+                // Check if not voltooid deelwoord
+                .filter(i -> wordLemmas.get(i).getLemmas().stream().anyMatch(lemma -> !lemma.getLemma().startsWith("WKW:VTD")))
                 .mapToObj(i -> findFullAction(wordLemmas, i))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -51,7 +55,8 @@ public class ActionExtractor {
 
         int startOfAction = i;
         while (startOfAction > 0
-                && canBePartOfActionDescriptor(wordLemmas.get(startOfAction - 1))) {
+                && canBePartOfActionDescriptor(wordLemmas.get(startOfAction - 1))
+                && canBePartOfBackwardsActionDescriptor(startOfAction - 1, wordLemmas)) {
             startOfAction -= 1;
         }
 
@@ -78,57 +83,70 @@ public class ActionExtractor {
         boolean spaceRequired = (sentenceAfterVerb.length() > 0) && (sentenceBeforeVerb.length() > 0);
 
         return Optional.of(new ActionDescription(action,
-                sentenceBeforeVerb + (spaceRequired ? " " : "") + sentenceAfterVerb));
+                sentenceBeforeVerb + (spaceRequired ? " " : "") + sentenceAfterVerb))
+                .map(this::fixAction);
     }
 
-    @Deprecated
-    private Optional<ActionDescription> findFullActionOld(List<WordLemmaPOS> wordLemmas, int i) {
-
-        // If "te" before: not a real interesting verb
-//        if ()
-
-        // If next word is punctuation: look back!
-        if (wordLemmas.size() <= i + 1 || wordLemmas.get(i + 1).getTag().equals(POStag.PUNCTUATION)) {
-            return findBackwardsFullAction(wordLemmas, i).map(this::fixAction);
-        }
-        return findForwardsFullAction(wordLemmas, i).map(this::fixAction);
-
-    }
+//    @Deprecated
+//    private Optional<ActionDescription> findFullActionOld(List<WordLemmaPOS> wordLemmas, int i) {
+//
+//        // If "te" before: not a real interesting verb
+////        if ()
+//
+//        // If next word is punctuation: look back!
+//        if (wordLemmas.size() <= i + 1 || wordLemmas.get(i + 1).getTag().equals(POStag.PUNCTUATION)) {
+//            return findBackwardsFullAction(wordLemmas, i).map(this::fixAction);
+//        }
+//        return findForwardsFullAction(wordLemmas, i).map(this::fixAction);
+//
+//    }
 
     private ActionDescription fixAction(ActionDescription actionDescription) {
         String verb = actionDescription.getVerb();
         String sentence = actionDescription.getRestOfSentence();
         if (sentence.endsWith(" te")) {
-            sentence = sentence.substring(0, sentence.length() - 1 - 3);
+            sentence = sentence.substring(0, sentence.length() - 3);
         }
         if (sentence.endsWith(" en")) {
-            sentence = sentence.substring(0, sentence.length() - 1 - 3);
+            sentence = sentence.substring(0, sentence.length() - 3);
         }
         if (sentence.endsWith("en ")) {
-            sentence = sentence.substring(3, sentence.length() - 1);
+            sentence = sentence.substring(3, sentence.length());
         }
         return new ActionDescription(verb, sentence.trim());
     }
 
-    @Deprecated
-    private Optional<ActionDescription> findBackwardsFullAction(List<WordLemmaPOS> wordLemmas, int i) {
-        String action = DutchVerbUtil.toStemVerb(wordLemmas.get(i));
+//    @Deprecated
+//    private Optional<ActionDescription> findBackwardsFullAction(List<WordLemmaPOS> wordLemmas, int i) {
+//        String action = DutchVerbUtil.toStemVerb(wordLemmas.get(i));
+//
+//        int startOfAction = i;
+//        while (startOfAction > 0
+//                && canBePartOfActionDescriptor(wordLemmas.get(startOfAction - 1))
+//                ) {
+//            startOfAction -= 1;
+//        }
+//
+//
+//        return Optional.of(new ActionDescription(action,
+//                wordLemmas
+//                        .subList(startOfAction, Math.max(0, i))
+//                        .stream()
+//                        .map(WordPOS::getWord)
+//                        .collect(Collectors.joining(" ")))
+//        );
+//
+//    }
 
-        int startOfAction = i;
-        while (startOfAction > 0
-                && canBePartOfActionDescriptor(wordLemmas.get(startOfAction - 1))) {
-            startOfAction -= 1;
+    private boolean canBePartOfBackwardsActionDescriptor(int i, List<WordLemmaPOS> wordLemmas) {
+        if (bijzinBeginners.contains(wordLemmas.get(i).getWord())
+                || bijzinBeginnersPOS.contains(wordLemmas.get(i).getTag())) {
+            int nounIdx = i-1;
+            if (nounIdx >= 0 && wordLemmas.get(nounIdx).getTag().equals(POStag.NOUN)) {
+                return false;
+            }
         }
-
-
-        return Optional.of(new ActionDescription(action,
-                wordLemmas
-                        .subList(startOfAction, Math.max(0, i))
-                        .stream()
-                        .map(WordPOS::getWord)
-                        .collect(Collectors.joining(" ")))
-        );
-
+        return true;
     }
 
     private boolean canBePartOfActionDescriptor(WordLemmaPOS wordLemmaPOS) {
@@ -164,23 +182,23 @@ public class ActionExtractor {
     }
 
 
-    @Deprecated
-    private Optional<ActionDescription> findForwardsFullAction(List<WordLemmaPOS> wordLemmas, int i) {
-        String action = DutchVerbUtil.toStemVerb(wordLemmas.get(i));
-
-        int endOfAction = i;
-        while (endOfAction < wordLemmas.size() - 1
-                && canBePartOfActionDescriptor(wordLemmas.get(endOfAction + 1))) {
-            endOfAction += 1;
-        }
-
-
-        return Optional.of(new ActionDescription(action,
-                wordLemmas
-                        .subList(i + 1, Math.min(wordLemmas.size(), endOfAction) + 1)
-                        .stream()
-                        .map(WordPOS::getWord)
-                        .collect(Collectors.joining(" ")))
-        );
-    }
+//    @Deprecated
+//    private Optional<ActionDescription> findForwardsFullAction(List<WordLemmaPOS> wordLemmas, int i) {
+//        String action = DutchVerbUtil.toStemVerb(wordLemmas.get(i));
+//
+//        int endOfAction = i;
+//        while (endOfAction < wordLemmas.size() - 1
+//                && canBePartOfActionDescriptor(wordLemmas.get(endOfAction + 1))) {
+//            endOfAction += 1;
+//        }
+//
+//
+//        return Optional.of(new ActionDescription(action,
+//                wordLemmas
+//                        .subList(i + 1, Math.min(wordLemmas.size(), endOfAction) + 1)
+//                        .stream()
+//                        .map(WordPOS::getWord)
+//                        .collect(Collectors.joining(" ")))
+//        );
+//    }
 }
