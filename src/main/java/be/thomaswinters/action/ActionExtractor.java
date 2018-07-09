@@ -1,15 +1,14 @@
 package be.thomaswinters.action;
 
 import be.thomaswinters.action.data.ActionDescription;
+import be.thomaswinters.language.dutch.DutchVerbUtil;
 import be.thomaswinters.language.pos.ProbabilisticPosTagger;
-import be.thomaswinters.language.pos.data.LemmaPOS;
 import be.thomaswinters.language.pos.data.POStag;
 import be.thomaswinters.language.pos.data.WordLemmaPOS;
 import be.thomaswinters.language.pos.data.WordPOS;
 import be.thomaswinters.sentence.SentenceUtil;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -21,14 +20,15 @@ public class ActionExtractor {
     private final static Set<String> onderwerpen = Set.of("ik", "jij", "wij", "hij", "zij");
     private final ProbabilisticPosTagger tagger;
 
-    public ActionExtractor() throws IOException {
-        this.tagger = new ProbabilisticPosTagger();
+    public ActionExtractor(ProbabilisticPosTagger tagger) {
+        this.tagger = tagger;
     }
 
-    public List<ActionDescription> extractAction(String sentence) throws IOException {
-        List<WordLemmaPOS> wordLemmas = tagger.tag(sentence);
+    public ActionExtractor() throws IOException {
+        this(new ProbabilisticPosTagger());
+    }
 
-//        System.out.println(wordLemmas);
+    public List<ActionDescription> extractAction(List<WordLemmaPOS> wordLemmas) throws IOException {
         return IntStream
                 .range(0, wordLemmas.size())
                 .filter(i -> wordLemmas.get(i).getTag().equals(POStag.VERB))
@@ -38,6 +38,11 @@ public class ActionExtractor {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
+    }
+
+    public List<ActionDescription> extractAction(String sentence) throws IOException {
+        List<WordLemmaPOS> wordLemmas = tagger.tag(sentence);
+        return extractAction(wordLemmas);
 
     }
 
@@ -55,7 +60,7 @@ public class ActionExtractor {
     }
 
     private Optional<ActionDescription> findBackwardsFullAction(List<WordLemmaPOS> wordLemmas, int i) {
-        String action = toStemVerb(wordLemmas.get(i));
+        String action = DutchVerbUtil.toStemVerb(wordLemmas.get(i));
 
         int startOfAction = i;
         while (startOfAction > 0
@@ -106,23 +111,9 @@ public class ActionExtractor {
 
     }
 
-    private String toStemVerb(WordLemmaPOS wordLemmaPOS) {
-        List<LemmaPOS> lemmas = wordLemmaPOS.getLemmas();
-
-        if (!lemmas.isEmpty()) {
-            // Find shortest lemma
-            return lemmas.stream()
-                    .min(Comparator.comparingInt(e -> e.getLemma().length())).get().getLemma();
-        }
-        if (wordLemmaPOS.getWord().endsWith("en")) {
-            return wordLemmaPOS.getWord();
-        } else {
-            throw new IllegalStateException("No lemma of verb left: TODO: form yourself / look up on wiktionary! " + wordLemmaPOS);
-        }
-    }
 
     private Optional<ActionDescription> findForwardsFullAction(List<WordLemmaPOS> wordLemmas, int i) {
-        String action = toStemVerb(wordLemmas.get(i));
+        String action = DutchVerbUtil.toStemVerb(wordLemmas.get(i));
 
         int endOfAction = i;
         while (endOfAction < wordLemmas.size() - 1
