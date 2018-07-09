@@ -66,6 +66,14 @@ public class DutchFirstPersonConverter {
                 .collect(Collectors.joining(" "));
     }
 
+    public String toThirdPersonSingularVerb(String verb) {
+        String firstPerson = toFirstPersonSingularVerb(verb);
+        if (firstPerson.equals("kan")) {
+            return "kunt";
+        }
+        return firstPerson + "t";
+    }
+
     public String toFirstPersonSingularVerb(String verb) {
 
         if (verb.equals("zijn")) {
