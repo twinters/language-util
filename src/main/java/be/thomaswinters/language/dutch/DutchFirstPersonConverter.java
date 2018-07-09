@@ -74,6 +74,9 @@ public class DutchFirstPersonConverter {
         if (firstPerson.equals("ben")) {
             return "is";
         }
+        if (firstPerson.charAt(firstPerson.length()-1) == 't') {
+            return firstPerson;
+        }
         return firstPerson + "t";
     }
 
@@ -90,6 +93,9 @@ public class DutchFirstPersonConverter {
         }
         if (verb.endsWith("aan")) {
             return verb.substring(0, verb.length() - 2);
+        }
+        if (verb.equals("kunnen")) {
+            return "kan";
         }
         if (verb.contains("en")) {
             String result = verb.substring(0, verb.lastIndexOf("en"));

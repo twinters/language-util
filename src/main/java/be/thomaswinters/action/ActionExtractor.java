@@ -53,10 +53,25 @@ public class ActionExtractor {
 
         // If next word is punctuation: look back!
         if (wordLemmas.size() <= i + 1 || wordLemmas.get(i + 1).getTag().equals(POStag.PUNCTUATION)) {
-            return findBackwardsFullAction(wordLemmas, i);
+            return findBackwardsFullAction(wordLemmas, i).map(this::fixAction);
         }
-        return findForwardsFullAction(wordLemmas, i);
+        return findForwardsFullAction(wordLemmas, i).map(this::fixAction);
 
+    }
+
+    private ActionDescription fixAction(ActionDescription actionDescription) {
+        String verb = actionDescription.getVerb();
+        String sentence = actionDescription.getRestOfSentence();
+        if (sentence.endsWith(" te")) {
+            sentence = sentence.substring(0, sentence.length() - 1 - 3);
+        }
+        if (sentence.endsWith(" en")) {
+            sentence = sentence.substring(0, sentence.length() - 1 - 3);
+        }
+        if (sentence.endsWith("en ")) {
+            sentence = sentence.substring(3, sentence.length() - 1);
+        }
+        return new ActionDescription(verb, sentence.trim());
     }
 
     private Optional<ActionDescription> findBackwardsFullAction(List<WordLemmaPOS> wordLemmas, int i) {
