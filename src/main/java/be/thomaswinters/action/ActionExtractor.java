@@ -61,11 +61,11 @@ public class ActionExtractor {
         }
 
         String sentenceBeforeVerb =
-                wordLemmas
+                fixActionSentence(wordLemmas
                         .subList(startOfAction, Math.max(0, i))
                         .stream()
                         .map(WordPOS::getWord)
-                        .collect(Collectors.joining(" "));
+                        .collect(Collectors.joining(" ")));
 
         int endOfAction = i;
         while (endOfAction < wordLemmas.size() - 1
@@ -74,17 +74,16 @@ public class ActionExtractor {
         }
 
         String sentenceAfterVerb =
-                wordLemmas
+                fixActionSentence(wordLemmas
                         .subList(i + 1, Math.min(wordLemmas.size(), endOfAction) + 1)
                         .stream()
                         .map(WordPOS::getWord)
-                        .collect(Collectors.joining(" "));
+                        .collect(Collectors.joining(" ")));
 
         boolean spaceRequired = (sentenceAfterVerb.length() > 0) && (sentenceBeforeVerb.length() > 0);
 
         return Optional.of(new ActionDescription(action,
-                sentenceBeforeVerb + (spaceRequired ? " " : "") + sentenceAfterVerb))
-                .map(this::fixAction);
+                sentenceBeforeVerb + (spaceRequired ? " " : "") + sentenceAfterVerb));
     }
 
 //    @Deprecated
@@ -101,19 +100,23 @@ public class ActionExtractor {
 //
 //    }
 
-    private ActionDescription fixAction(ActionDescription actionDescription) {
-        String verb = actionDescription.getVerb();
-        String sentence = actionDescription.getRestOfSentence();
+    private String fixActionSentence(String sentence) {
         if (sentence.endsWith(" te")) {
+            sentence = sentence.substring(0, sentence.length() - 3);
+        }
+        if (sentence.endsWith(" voor")) {
+            sentence = sentence.substring(0, sentence.length() - 5);
+        }
+        if (sentence.endsWith(" om")) {
             sentence = sentence.substring(0, sentence.length() - 3);
         }
         if (sentence.endsWith(" en")) {
             sentence = sentence.substring(0, sentence.length() - 3);
         }
-        if (sentence.endsWith("en ")) {
+        if (sentence.startsWith("en ")) {
             sentence = sentence.substring(3, sentence.length());
         }
-        return new ActionDescription(verb, sentence.trim());
+        return sentence.trim();
     }
 
 //    @Deprecated
