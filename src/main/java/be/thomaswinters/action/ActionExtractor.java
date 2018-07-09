@@ -101,6 +101,8 @@ public class ActionExtractor {
 //    }
 
     private String fixActionSentence(String sentence) {
+        sentence = " " + sentence.trim();
+        // ENDINGS
         if (sentence.endsWith(" te")) {
             sentence = sentence.substring(0, sentence.length() - 3);
         }
@@ -113,6 +115,8 @@ public class ActionExtractor {
         if (sentence.endsWith(" en")) {
             sentence = sentence.substring(0, sentence.length() - 3);
         }
+        // STARTS
+        sentence = sentence.trim() + " ";
         if (sentence.startsWith("en ")) {
             sentence = sentence.substring(3, sentence.length());
         }
