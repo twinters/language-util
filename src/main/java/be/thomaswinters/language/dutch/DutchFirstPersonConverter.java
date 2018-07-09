@@ -74,8 +74,12 @@ public class DutchFirstPersonConverter {
         if (firstPerson.equals("ben")) {
             return "is";
         }
-        if (firstPerson.charAt(firstPerson.length()-1) == 't') {
+        char lastChar =firstPerson.charAt(firstPerson.length()-1);
+        if (lastChar == 't') {
             return firstPerson;
+        }
+        if (lastChar == 'a' || lastChar == 'e' || lastChar == 'o' || lastChar == 'u') {
+            return firstPerson + lastChar + 't';
         }
         return firstPerson + "t";
     }
