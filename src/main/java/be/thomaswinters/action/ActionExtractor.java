@@ -47,6 +47,42 @@ public class ActionExtractor {
     }
 
     private Optional<ActionDescription> findFullAction(List<WordLemmaPOS> wordLemmas, int i) {
+        String action = DutchVerbUtil.toStemVerb(wordLemmas.get(i));
+
+        int startOfAction = i;
+        while (startOfAction > 0
+                && canBePartOfActionDescriptor(wordLemmas.get(startOfAction - 1))) {
+            startOfAction -= 1;
+        }
+
+        String sentenceBeforeVerb =
+                wordLemmas
+                        .subList(startOfAction, Math.max(0, i))
+                        .stream()
+                        .map(WordPOS::getWord)
+                        .collect(Collectors.joining(" "));
+
+        int endOfAction = i;
+        while (endOfAction < wordLemmas.size() - 1
+                && canBePartOfActionDescriptor(wordLemmas.get(endOfAction + 1))) {
+            endOfAction += 1;
+        }
+
+        String sentenceAfterVerb =
+                wordLemmas
+                        .subList(i + 1, Math.min(wordLemmas.size(), endOfAction) + 1)
+                        .stream()
+                        .map(WordPOS::getWord)
+                        .collect(Collectors.joining(" "));
+
+        boolean spaceRequired = (sentenceAfterVerb.length() > 0) && (sentenceBeforeVerb.length() > 0);
+
+        return Optional.of(new ActionDescription(action,
+                sentenceBeforeVerb + (spaceRequired ? " " : "") + sentenceAfterVerb));
+    }
+
+    @Deprecated
+    private Optional<ActionDescription> findFullActionOld(List<WordLemmaPOS> wordLemmas, int i) {
 
         // If "te" before: not a real interesting verb
 //        if ()
@@ -74,6 +110,7 @@ public class ActionExtractor {
         return new ActionDescription(verb, sentence.trim());
     }
 
+    @Deprecated
     private Optional<ActionDescription> findBackwardsFullAction(List<WordLemmaPOS> wordLemmas, int i) {
         String action = DutchVerbUtil.toStemVerb(wordLemmas.get(i));
 
@@ -127,6 +164,7 @@ public class ActionExtractor {
     }
 
 
+    @Deprecated
     private Optional<ActionDescription> findForwardsFullAction(List<WordLemmaPOS> wordLemmas, int i) {
         String action = DutchVerbUtil.toStemVerb(wordLemmas.get(i));
 
