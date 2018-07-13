@@ -147,7 +147,7 @@ public class ActionExtractor {
 
     private boolean canBePartOfBackwardsActionDescriptor(int i, List<WordLemmaPOS> wordLemmas) {
         if (bijzinBeginners.contains(wordLemmas.get(i).getWord())
-                || bijzinBeginnersPOS.contains(wordLemmas.get(i).getTag())) {
+                || (bijzinBeginnersPOS.contains(wordLemmas.get(i).getTag()) && !wordLemmas.get(i).getWord().equals("te"))) {
             int nounIdx = i-1;
             if (nounIdx >= 0 && wordLemmas.get(nounIdx).getTag().equals(POStag.NOUN)) {
                 return false;
@@ -166,7 +166,7 @@ public class ActionExtractor {
         }
         // Adverbs are usually also a bad sign
         if (wordLemmaPOS.getTag().equals(POStag.ADVERB)) {
-            return false;
+            return true;
         }
         // Stop when hitting an obvious onderwerp
         if (onderwerpen.contains(word)) {
