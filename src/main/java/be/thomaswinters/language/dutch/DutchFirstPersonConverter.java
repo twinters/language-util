@@ -74,11 +74,16 @@ public class DutchFirstPersonConverter {
         if (firstPerson.equals("ben")) {
             return "is";
         }
-        char lastChar =firstPerson.charAt(firstPerson.length()-1);
+        if (firstPerson.equals("heb")) {
+            return "heeft";
+        }
+        char lastChar = firstPerson.charAt(firstPerson.length() - 1);
         if (lastChar == 't') {
             return firstPerson;
         }
-        if (lastChar == 'a' || lastChar == 'e' || lastChar == 'o' || lastChar == 'u') {
+        if ((vowels.contains(lastChar + "") && lastChar != 'i')
+                // Doesn't end in two vowels: maybe just check that previous to last is not vowel TODO
+                && !tweeklanken.contains(firstPerson.substring(firstPerson.length() - 2, firstPerson.length()))) {
             return firstPerson + lastChar + 't';
         }
         return firstPerson + "t";
@@ -88,6 +93,9 @@ public class DutchFirstPersonConverter {
 
         if (verb.equals("zijn")) {
             return "ben";
+        }
+        if (verb.endsWith("oeien")) {
+            return verb.substring(0, verb.length() - 2);
         }
         if (verb.endsWith("ien")) {
             return verb.substring(0, verb.length() - 1);
