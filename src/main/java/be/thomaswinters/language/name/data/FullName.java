@@ -19,4 +19,9 @@ public class FullName {
     public Optional<String> getLastName() {
         return lastName;
     }
+
+    @Override
+    public String toString() {
+        return firstName + "|" + lastName;
+    }
 }

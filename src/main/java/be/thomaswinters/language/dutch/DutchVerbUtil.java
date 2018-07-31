@@ -11,7 +11,7 @@ import java.util.Set;
 public class DutchVerbUtil {
 
     private static final Set<String> voorzetsels = Set.of("af", "toe", "weg", "op", "binnen", "door", "in", "langs",
-            "om", "over", "rond", "uit", "voorbij", "aan", "samen","bij");
+            "om", "over", "rond", "uit", "voorbij", "aan", "samen", "bij");
     private static final Set<String> voorzetselsUitzonderingPrefixen = Set.of("inter", "intimideer", "installeer", "investeer",
             "innoveer", "overtref", "overkomen", "overwegen", "overlasten", "overschrijd", "overtuig");
 

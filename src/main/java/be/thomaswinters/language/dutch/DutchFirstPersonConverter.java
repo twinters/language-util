@@ -106,6 +106,9 @@ public class DutchFirstPersonConverter {
         if (verb.endsWith("aan")) {
             return verb.substring(0, verb.length() - 2);
         }
+        if (verb.endsWith("eten")) {
+            return verb.substring(0, verb.length() - 4) + "eet";
+        }
         if (verb.equals("kunnen")) {
             return "kan";
         }
