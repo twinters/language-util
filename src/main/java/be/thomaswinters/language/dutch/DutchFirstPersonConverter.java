@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 public class DutchFirstPersonConverter {
     private final ImmutableSet<String> vowels = ImmutableSet.copyOf(DataLoader.readLines("language-data/vowels.txt"));
     private final ImmutableSet<String> tweeklanken = ImmutableSet.copyOf(DataLoader.readLines("language-data/tweeklanken.txt"));
+    private final String tweeklankenRegex = "(" + tweeklanken.stream().collect(Collectors.joining("|")) + ")";
     private final ImmutableSet<String> deurtjeOpenUitzonderingen = ImmutableSet.of("komen");
 
     public DutchFirstPersonConverter() throws IOException {
@@ -94,10 +95,7 @@ public class DutchFirstPersonConverter {
         if (verb.equals("zijn")) {
             return "ben";
         }
-        if (verb.endsWith("oeien")) {
-            return verb.substring(0, verb.length() - 2);
-        }
-        if (verb.endsWith("eien")) {
+        if (verb.matches(".*[aeiou]ien")) {
             return verb.substring(0, verb.length() - 2);
         }
         if (verb.endsWith("ien")) {
@@ -121,13 +119,13 @@ public class DutchFirstPersonConverter {
 
             // Deurtje open lettertje lopen
             if (result.length() >= 2
-                    && !vowels.contains(result.charAt(result.length() - 1) + "")
-                    && vowels.contains(result.charAt(result.length() - 2) + "")
-                    && (result.length() >= 3 && !tweeklanken.contains(result.substring(result.length() - 3, result.length() - 1)))
                     // Verdubbel geen i
-                    && result.charAt(result.length() - 2) != 'i'
-                    // Uitzondering voor 'el'
-                    && !(result.substring(result.length() - 2, result.length() - 1).equals("el"))
+                    && result.matches(".*[aeou][^aeiou]")
+                    // Verdubbel geen deel van een tweeklank
+                    && (result.length() < 3 || !result.matches(".*"+tweeklankenRegex))
+                    // Uitzondering voor doffe 'e's (proxy: lange woorden)
+                    && !result.matches(".+..e[lr]")
+//                    && !(result.substring(result.length() - 2, result.length() - 1).equals("el"))
                     ) {
                 if (deurtjeOpenUitzonderingen.stream().noneMatch(verb::endsWith)) {
                     result = result.substring(0, result.length() - 1)

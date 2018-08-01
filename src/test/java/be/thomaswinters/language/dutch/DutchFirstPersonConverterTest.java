@@ -29,7 +29,22 @@ class DutchFirstPersonConverterTest {
         testFirstPersonConversion("ben", "zijn");
         testFirstPersonConversion("heb", "hebben");
         testFirstPersonConversion("loop", "lopen");
-//        testFirstPersonConversion("eer", "eren");
+        testFirstPersonConversion("teel", "telen");
+        testFirstPersonConversion("knip", "knippen");
+        testFirstPersonConversion("plak", "plakken");
+        testFirstPersonConversion("speel", "spelen");
+        testFirstPersonConversion("eer", "eren");
+        testFirstPersonConversion("kanker", "kankeren");
+        testFirstPersonConversion("behandel", "behandelen");
+        testFirstPersonConversion("beaam", "beamen");
+        testFirstPersonConversion("kietel", "kietelen");
+        testFirstPersonConversion("kriebel", "kriebelen");
+        testFirstPersonConversion("kriebel", "kriebelen");
+        testFirstPersonConversion("aai", "aaien");
+        testFirstPersonConversion("klop", "kloppen");
+        testFirstPersonConversion("steel", "stelen");
+        testFirstPersonConversion("deel", "delen");
+        testFirstPersonConversion("besticker", "bestickeren");
     }
 
     private void testFirstPersonConversion(String expected, String input) {
