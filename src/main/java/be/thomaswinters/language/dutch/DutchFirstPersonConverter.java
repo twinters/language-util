@@ -97,6 +97,9 @@ public class DutchFirstPersonConverter {
         if (verb.endsWith("oeien")) {
             return verb.substring(0, verb.length() - 2);
         }
+        if (verb.endsWith("eien")) {
+            return verb.substring(0, verb.length() - 2);
+        }
         if (verb.endsWith("ien")) {
             return verb.substring(0, verb.length() - 1);
         }
