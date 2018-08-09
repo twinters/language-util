@@ -25,6 +25,10 @@ public class ActionDescription {
         return restOfSentence;
     }
 
+    public String getAsText() {
+        return (getRestOfSentence().isEmpty() ? "" : getRestOfSentence() + " ") + getVerb();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

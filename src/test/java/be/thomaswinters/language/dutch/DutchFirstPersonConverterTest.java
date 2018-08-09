@@ -45,6 +45,7 @@ class DutchFirstPersonConverterTest {
         testFirstPersonConversion("steel", "stelen");
         testFirstPersonConversion("deel", "delen");
         testFirstPersonConversion("besticker", "bestickeren");
+//        testFirstPersonConversion("installeer", "installeren");
     }
 
     private void testFirstPersonConversion(String expected, String input) {

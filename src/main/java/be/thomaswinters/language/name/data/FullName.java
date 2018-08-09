@@ -4,11 +4,16 @@ import java.util.Optional;
 
 public class FullName {
     private final String firstName;
-    private final Optional<String> lastName;
+    private final String lastName;
 
-    public FullName(String firstName, Optional<String> lastName) {
+    public FullName(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    @Deprecated
+    public FullName(String firstName, Optional<String> lastName) {
+        this(firstName, lastName.orElse(null));
     }
 
     public String getFirstName() {
@@ -17,7 +22,7 @@ public class FullName {
     }
 
     public Optional<String> getLastName() {
-        return lastName;
+        return Optional.ofNullable(lastName);
     }
 
     @Override
