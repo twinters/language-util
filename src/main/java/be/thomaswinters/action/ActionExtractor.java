@@ -21,9 +21,19 @@ public class ActionExtractor {
     private static final Set<String> bijzinBeginners = Set.of("om", "die", "dat");
     private static final Set<POStag> bijzinBeginnersPOS = Set.of(POStag.CONJUNCTION, POStag.PREPOSITION);
     private final ProbabilisticPosTagger tagger;
+    private final boolean allowVoltooidDeelwoord;
+
+    public ActionExtractor(ProbabilisticPosTagger tagger, boolean allowVoltooidDeelwoord1) {
+        this.tagger = tagger;
+        this.allowVoltooidDeelwoord = allowVoltooidDeelwoord1;
+    }
+
+    public ActionExtractor(boolean allowVoltooidDeelwoord) throws IOException {
+        this(new ProbabilisticPosTagger(), allowVoltooidDeelwoord);
+    }
 
     public ActionExtractor(ProbabilisticPosTagger tagger) {
-        this.tagger = tagger;
+        this(tagger, true);
     }
 
     public ActionExtractor() throws IOException {
@@ -37,7 +47,8 @@ public class ActionExtractor {
                 // Double check if real verb
                 .filter(i -> !wordLemmas.get(i).getLemmas().isEmpty())
                 // Check if not voltooid deelwoord
-                .filter(i -> wordLemmas.get(i).getLemmas().stream().anyMatch(lemma -> !lemma.getLemma().startsWith("WKW:VTD")))
+                .filter(i -> allowVoltooidDeelwoord
+                        || wordLemmas.get(i).getLemmas().stream().noneMatch(lemma -> lemma.getLemma().startsWith("WKW:VTD")))
                 .mapToObj(i -> findFullAction(wordLemmas, i))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -148,7 +159,7 @@ public class ActionExtractor {
     private boolean canBePartOfBackwardsActionDescriptor(int i, List<WordLemmaPOS> wordLemmas) {
         if (bijzinBeginners.contains(wordLemmas.get(i).getWord())
                 || (bijzinBeginnersPOS.contains(wordLemmas.get(i).getTag()) && !wordLemmas.get(i).getWord().equals("te"))) {
-            int nounIdx = i-1;
+            int nounIdx = i - 1;
             if (nounIdx >= 0 && wordLemmas.get(nounIdx).getTag().equals(POStag.NOUN)) {
                 return false;
             }
