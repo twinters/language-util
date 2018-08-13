@@ -93,8 +93,8 @@ public class ActionExtractor {
 
         boolean spaceRequired = (sentenceAfterVerb.length() > 0) && (sentenceBeforeVerb.length() > 0);
 
-        return Optional.of(new ActionDescription(action,
-                sentenceBeforeVerb + (spaceRequired ? " " : "") + sentenceAfterVerb));
+        return Optional.of(new ActionDescription(action.trim(),
+                (sentenceBeforeVerb + (spaceRequired ? " " : "") + sentenceAfterVerb).trim()));
     }
 
 //    @Deprecated
