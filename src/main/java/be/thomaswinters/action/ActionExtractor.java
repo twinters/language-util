@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 
 public class ActionExtractor {
     private final static Set<String> meaninglessVerbs = Set.of("zijn", "hebben", "worden", "gaan", "zullen", "betekenen");
-    private final static Set<String> onderwerpen = Set.of("ik", "jij", "wij", "hij", "zij");
+    private final static Set<String> onderwerpen = Set.of("ik", "jij", "wij", "hij", "zij", "ze", "we");
     private static final Set<String> bijzinBeginners = Set.of("om", "die", "dat");
     private static final Set<POStag> bijzinBeginnersPOS = Set.of(POStag.CONJUNCTION, POStag.PREPOSITION);
     private final ProbabilisticPosTagger tagger;

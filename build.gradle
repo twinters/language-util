@@ -22,6 +22,7 @@ dependencies {
 
     compile group: 'org.languagetool', name: 'language-nl', version: '4.1'
     compile group: 'org.apache.opennlp', name: 'opennlp-tools', version: '1.8.4'
+    compile group: 'org.daisy.dotify', name: 'dotify.hyphenator.impl', version: '2.0.0'
 
     compile project(':text-util')
 }

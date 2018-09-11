@@ -36,6 +36,12 @@ public class DutchSentenceSubjectReplacer {
         this(new DutchTags());
     }
 
+    public String secondPersonToThirdPerson(String input) throws IOException {
+        return replaceSecondPerson(input,
+                "zij", "hun", "hen", "zichzelf",
+                SubjectType.THIRD_SINGULAR);
+    }
+
     public String replaceSecondPerson(String input, String newSubject, String newObsessive,
                                       String newObject, String reflective, SubjectType type) throws IOException {
 
@@ -144,7 +150,7 @@ public class DutchSentenceSubjectReplacer {
 //
 //
 //                                    }
-                                else if ( (nextWordTokenTags.stream().anyMatch(languageTags::isNounTagStart)
+                                else if ((nextWordTokenTags.stream().anyMatch(languageTags::isNounTagStart)
                                         && !NounReplacementUtil.NOUN_BLACKLIST.contains(nextWordToken.getToken().toLowerCase()))
                                         || isEntity(nextWordToken)) {
 //                                        System.out.println("Noun (possibly after adjectives): must be obsessive!");
