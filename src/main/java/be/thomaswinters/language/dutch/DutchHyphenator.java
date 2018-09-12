@@ -32,4 +32,7 @@ public class DutchHyphenator {
         return output;
     }
 
+    public int getNumberOfSyllables(String s) {
+        return getSyllables(s).size();
+    }
 }
