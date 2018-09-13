@@ -1,20 +1,21 @@
 package be.thomaswinters.action;
 
 import be.thomaswinters.action.data.ActionDescription;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class ActionExtractorTest {
 
     private ActionExtractor actionExtractor;
 
-    @Before
+    @BeforeEach
     public void setup() throws IOException {
         actionExtractor = new ActionExtractor();
     }

@@ -1,7 +1,7 @@
 package be.thomaswinters.language.dutch.negator;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.languagetool.JLanguageTool;
 import org.languagetool.JLanguageToolAdaptor;
 import org.languagetool.language.Dutch;
@@ -10,13 +10,14 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
 
 public class VerbFirstRuleTest {
     private VerbFirstRule verbFirstRule;
 
-    @Before
+    @BeforeEach
     public void setup() {
         verbFirstRule = new VerbFirstRule(new JLanguageToolAdaptor(new JLanguageTool(new Dutch())));
     }

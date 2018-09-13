@@ -1,18 +1,20 @@
 package be.thomaswinters.language.dutch;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class NounReplacementUtilTest {
 
     private NounReplacementUtil nounReplacementUtil;
 
-    @Before
+    @BeforeEach
     public void setup() {
         nounReplacementUtil = new NounReplacementUtil();
     }

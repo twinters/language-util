@@ -1,17 +1,18 @@
 package be.thomaswinters.language.dutch;
 
 import be.thomaswinters.language.SubjectType;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class DutchSentenceSubjectReplacerTest {
     private DutchSentenceSubjectReplacer replacer;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         replacer = new DutchSentenceSubjectReplacer();
     }
