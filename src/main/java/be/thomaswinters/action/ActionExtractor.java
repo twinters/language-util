@@ -171,6 +171,10 @@ public class ActionExtractor {
 
         String word = SentenceUtil.removeNonLetters(wordLemmaPOS.getWord().toLowerCase().trim());
 
+        // Stop if doesn't contain any valid symbols
+        if (!SentenceUtil.hasSomeLettersNumbersOrPunctuation(wordLemmaPOS.getWord())) {
+            return false;
+        }
         // Stop when hitting a punctuation
         if (wordLemmaPOS.getTag().equals(POStag.PUNCTUATION)) {
             return false;
