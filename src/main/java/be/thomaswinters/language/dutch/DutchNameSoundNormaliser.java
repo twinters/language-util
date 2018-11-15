@@ -14,6 +14,7 @@ public class DutchNameSoundNormaliser {
 
     private static final Replacers replacers = new Replacers(Arrays.asList(
             new Replacer("uy", "ui", true, true),
+            new Replacer("ay", "ai", true, true),
             new Replacer("gh", "g", true, true),
             new Replacer("dt", "d", true, true),
             new Replacer("ck", "k", true, true),
@@ -32,7 +33,7 @@ public class DutchNameSoundNormaliser {
         regexes.put("uu(.)([aeiou])", "u$1$2");
         // ij wordt i
         regexes.put("([aeou])ij", "$1i");
-        regexes.put("(.+)y", "$1ij");
+        regexes.put("(.*[^aeou])y", "$1ij");
     }
 
     public static String normalise(String input) {
