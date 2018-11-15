@@ -122,7 +122,7 @@ public class DutchFirstPersonConverter {
                     // Verdubbel geen i
                     && result.matches(".*[aeou][^aeiou]")
                     // Verdubbel geen deel van een tweeklank
-                    && (result.length() < 3 || !result.matches(".*"+tweeklankenRegex))
+                    && (result.length() < 3 || !result.matches(".*"+tweeklankenRegex+".?"))
                     // Uitzondering voor doffe 'e's (proxy: lange woorden)
                     && !result.matches(".+..e[^aeiou]")
 //                    && !(result.substring(result.length() - 2, result.length() - 1).equals("el"))
