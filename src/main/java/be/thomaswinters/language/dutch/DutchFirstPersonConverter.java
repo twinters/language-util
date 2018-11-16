@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class DutchFirstPersonConverter {
     private final ImmutableSet<String> vowels = ImmutableSet.copyOf(DataLoader.readLines("language-data/vowels.txt"));
     private final ImmutableSet<String> tweeklanken = ImmutableSet.copyOf(DataLoader.readLines("language-data/tweeklanken.txt"));
-    private final String tweeklankenRegex = "(" + tweeklanken.stream().collect(Collectors.joining("|")) + ")";
+    private final String tweeklankenRegex = "(" + String.join("|", tweeklanken) + ")";
     private final ImmutableSet<String> deurtjeOpenUitzonderingen = ImmutableSet.of("komen");
 
     public DutchFirstPersonConverter() throws IOException {
@@ -107,7 +107,7 @@ public class DutchFirstPersonConverter {
         if (verb.endsWith("aan")) {
             return verb.substring(0, verb.length() - 2);
         }
-        if (verb.endsWith("eten")) {
+        if (verb.matches(".*[^aeiou]eten$")) {
             return verb.substring(0, verb.length() - 4) + "eet";
         }
         if (verb.equals("kunnen")) {
@@ -115,7 +115,6 @@ public class DutchFirstPersonConverter {
         }
         if (verb.contains("en")) {
             String result = verb.substring(0, verb.lastIndexOf("en"));
-
 
             // Deurtje open lettertje lopen
             if (result.length() >= 2
