@@ -107,7 +107,7 @@ public class DutchFirstPersonConverter {
         if (verb.endsWith("aan")) {
             return verb.substring(0, verb.length() - 2);
         }
-        if (verb.endsWith("eten")) {
+        if (verb.matches(".*[^aeiou]eten$")) {
             return verb.substring(0, verb.length() - 4) + "eet";
         }
         if (verb.equals("kunnen")) {
@@ -123,6 +123,8 @@ public class DutchFirstPersonConverter {
                     && result.matches(".*[aeou][^aeiou]")
                     // Verdubbel geen deel van een tweeklank
                     && (result.length() < 3 || !result.matches(".*"+tweeklankenRegex))
+                    // Verdubbel geen deel van een tweeklank voor andere letter
+                    && (result.length() < 3 || !result.matches(".*"+tweeklankenRegex + "[^aeiou]"))
                     // Uitzondering voor doffe 'e's (proxy: lange woorden)
                     && !result.matches(".+..e[lr]")
 //                    && !(result.substring(result.length() - 2, result.length() - 1).equals("el"))

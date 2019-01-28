@@ -46,6 +46,8 @@ class DutchFirstPersonConverterTest {
         testFirstPersonConversion("deel", "delen");
         testFirstPersonConversion("besticker", "bestickeren");
         testFirstPersonConversion("zaai", "zaaien");
+        testFirstPersonConversion("groet", "groeten");
+        testFirstPersonConversion("houd", "houden");
 //        testFirstPersonConversion("installeer", "installeren");
     }
 
