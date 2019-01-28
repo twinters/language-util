@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class DutchFirstPersonConverter {
     private final ImmutableSet<String> vowels = ImmutableSet.copyOf(DataLoader.readLines("language-data/vowels.txt"));
     private final ImmutableSet<String> tweeklanken = ImmutableSet.copyOf(DataLoader.readLines("language-data/tweeklanken.txt"));
-    private final String tweeklankenRegex = "(" + tweeklanken.stream().collect(Collectors.joining("|")) + ")";
+    private final String tweeklankenRegex = "(" + String.join("|", tweeklanken) + ")";
     private final ImmutableSet<String> deurtjeOpenUitzonderingen = ImmutableSet.of("komen");
 
     public DutchFirstPersonConverter() throws IOException {
@@ -116,17 +116,17 @@ public class DutchFirstPersonConverter {
         if (verb.contains("en")) {
             String result = verb.substring(0, verb.lastIndexOf("en"));
 
-
             // Deurtje open lettertje lopen
             if (result.length() >= 2
                     // Verdubbel geen i
                     && result.matches(".*[aeou][^aeiou]")
                     // Verdubbel geen deel van een tweeklank
-                    && (result.length() < 3 || !result.matches(".*"+tweeklankenRegex))
+                    && (result.length() < 3 || !result.matches(".*"+tweeklankenRegex+"$"))
                     // Verdubbel geen deel van een tweeklank voor andere letter
-                    && (result.length() < 3 || !result.matches(".*"+tweeklankenRegex + "[^aeiou]"))
+//                    && (result.length() < 3 || !result.matches(".*"+tweeklankenRegex + "[^aeiou]$"))
+                    && (result.length() < 3 || !result.matches(".*"+tweeklankenRegex+".?$"))
                     // Uitzondering voor doffe 'e's (proxy: lange woorden)
-                    && !result.matches(".+..e[lr]")
+                    && !result.matches(".+..e[^aeiou]")
 //                    && !(result.substring(result.length() - 2, result.length() - 1).equals("el"))
                     ) {
                 if (deurtjeOpenUitzonderingen.stream().noneMatch(verb::endsWith)) {

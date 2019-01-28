@@ -48,6 +48,9 @@ class DutchFirstPersonConverterTest {
         testFirstPersonConversion("zaai", "zaaien");
         testFirstPersonConversion("groet", "groeten");
         testFirstPersonConversion("houd", "houden");
+        testFirstPersonConversion("snoep", "snoepen");
+        testFirstPersonConversion("snauw", "snauwen");
+        testFirstPersonConversion("schiet", "schieten");
 //        testFirstPersonConversion("installeer", "installeren");
     }
 

@@ -13,25 +13,27 @@ import java.util.Map;
 public class DutchNameSoundNormaliser {
 
     private static final Replacers replacers = new Replacers(Arrays.asList(
-            new Replacer("ae", "aa", true, true),
             new Replacer("uy", "ui", true, true),
+            new Replacer("ay", "ai", true, true),
             new Replacer("gh", "g", true, true),
             new Replacer("dt", "d", true, true),
             new Replacer("ck", "k", true, true),
-            new Replacer("kx", "ks", true, true),
-            new Replacer("y", "ij", true, true)
+            new Replacer("kx", "ks", true, true)
     ));
 
     private static final Map<String, String> regexes = new HashMap<>();
 
     static {
         // Deurtje open lettertje lopen
+        regexes.put("ae(.)([aeiou])", "a$1$2");
+        regexes.put("ae(.)([^aeiou])", "aa$1$2");
         regexes.put("aa(.)([aeiou])", "a$1$2");
         regexes.put("ee(.)([aeiou])", "e$1$2");
         regexes.put("oo(.)([aeiou])", "o$1$2");
         regexes.put("uu(.)([aeiou])", "u$1$2");
         // ij wordt i
         regexes.put("([aeou])ij", "$1i");
+        regexes.put("(.*[^aeou])y", "$1ij");
     }
 
     public static String normalise(String input) {
