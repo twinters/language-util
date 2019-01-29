@@ -78,14 +78,16 @@ public class DutchFirstPersonConverter {
         if (firstPerson.equals("heb")) {
             return "heeft";
         }
-        char lastChar = firstPerson.charAt(firstPerson.length() - 1);
-        if (lastChar == 't') {
-            return firstPerson;
-        }
-        if ((vowels.contains(lastChar + "") && lastChar != 'i')
-                // Doesn't end in two vowels: maybe just check that previous to last is not vowel TODO
-                && !tweeklanken.contains(firstPerson.substring(firstPerson.length() - 2, firstPerson.length()))) {
-            return firstPerson + lastChar + 't';
+        if (firstPerson.length() > 0) {
+            char lastChar = firstPerson.charAt(firstPerson.length() - 1);
+            if (lastChar == 't') {
+                return firstPerson;
+            }
+            if ((vowels.contains(lastChar + "") && lastChar != 'i')
+                    // Doesn't end in two vowels: maybe just check that previous to last is not vowel TODO
+                    && !tweeklanken.contains(firstPerson.substring(firstPerson.length() - 2, firstPerson.length()))) {
+                return firstPerson + lastChar + 't';
+            }
         }
         return firstPerson + "t";
     }
@@ -143,10 +145,10 @@ public class DutchFirstPersonConverter {
             }
 
 
-            if (result.charAt(result.length() - 1) == 'v') {
+            if (result.length() >= 2 && result.charAt(result.length() - 1) == 'v') {
                 result = result.substring(0, result.length() - 1) + 'f';
             }
-            if (result.charAt(result.length() - 1) == 'z') {
+            if (result.length() >= 2 && result.charAt(result.length() - 1) == 'z') {
                 result = result.substring(0, result.length() - 1) + 's';
             }
             return result;
